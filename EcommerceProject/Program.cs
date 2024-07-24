@@ -33,9 +33,7 @@ builder.Services.AddScoped<ConfirmMailService>();
 builder.Services.AddAuthentication()
         .AddGoogle(opts =>
         {
-            opts.ClientId ="deneme"  ;
-            opts.ClientSecret = "deneme" ;
-            opts.SignInScheme = IdentityConstants.ExternalScheme;
+            
         });
 
 var app = builder.Build();
