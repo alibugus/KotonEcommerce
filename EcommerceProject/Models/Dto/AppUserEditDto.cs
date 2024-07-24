@@ -1,4 +1,4 @@
-﻿namespace EcommerceProject.Dto
+﻿namespace EcommerceProject.Models.Dto
 {
     public class AppUserEditDto
     {

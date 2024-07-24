@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
@@ -24,11 +25,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="C:\Users\alibu\source\repos\EcommerceProject\EcommerceProject\Models\.editorconfig" />
+    <None Include="wwwroot\gitt.gitignore" />
     <None Include="wwwroot\login\.DS_Store" />
     <None Include="wwwroot\login\css\.DS_Store" />
     <None Include="wwwroot\login\fonts\.DS_Store" />
     <None Include="wwwroot\login\images\.DS_Store" />
     <None Include="wwwroot\login\scss\.DS_Store" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\alibu\source\repos\EcommerceProject\EcommerceProject\Models\.editorconfig" />
   </ItemGroup>
 
 </Project>

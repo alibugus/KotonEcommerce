@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EcommerceProject.Dto
+namespace EcommerceProject.Models.Dto
 {
     public class AppUserRegisterDto
     {
