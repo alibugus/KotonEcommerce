@@ -33,8 +33,8 @@ builder.Services.AddScoped<ConfirmMailService>();
 builder.Services.AddAuthentication()
         .AddGoogle(opts =>
         {
-            opts.ClientId = "116794396854-alhpnf8vtjk6hk1ges7mov2o80dfan7m.apps.googleusercontent.com";
-            opts.ClientSecret = "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";
+            opts.ClientId ="deneme"  ;
+            opts.ClientSecret = "deneme" ;
             opts.SignInScheme = IdentityConstants.ExternalScheme;
         });
 
