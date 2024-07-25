@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <None Include="C:\Users\alibu\source\repos\EcommerceProject\EcommerceProject\Models\.editorconfig" />
+    <None Include="wwwroot\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.svg" />
     <None Include="wwwroot\gitt.gitignore" />
     <None Include="wwwroot\login\.DS_Store" />
     <None Include="wwwroot\login\css\.DS_Store" />

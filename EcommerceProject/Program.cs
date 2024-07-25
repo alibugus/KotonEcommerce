@@ -28,12 +28,19 @@ builder.Services.AddScoped<UserRepository>();
 // Register services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ConfirmMailService>();
+builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Configure Google Authentication
 builder.Services.AddAuthentication()
         .AddGoogle(opts =>
         {
-            
+            opts.ClientId = "116794396854-alhpnf8vtjk6hk1ges7mov2o80dfan7m.apps.googleusercontent.com";
+            opts.ClientSecret = "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";
+            opts.SignInScheme = IdentityConstants.ExternalScheme;
         });
 
 var app = builder.Build();
