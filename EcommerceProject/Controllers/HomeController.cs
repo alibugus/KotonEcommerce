@@ -1,5 +1,5 @@
 using EcommerceProject.Models;
-using EcommerceProject.Services;
+using EcommerceProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -23,13 +23,12 @@ namespace EcommerceProject.Controllers
         {
             var products = _productService.GetAllProducts();
             var categories = _categoryService.GetAllCategories();
-            var viewModel = new HomeViewModel
+            var viewModel = new ShopViewModel
             
             {
-                Products = products,
-                Categories = categories
-            };
-            ViewBag.UserName = TempData["UserName"];
+               Products = products,
+               Categories = categories,
+                         };
             return View(viewModel);
         }
 
@@ -44,11 +43,6 @@ namespace EcommerceProject.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        // Yeni metot: Belirli bir kategoriye göre ürünleri getirmek için
-        public PartialViewResult GetProductsByCategory(int categoryId)
-        {
-            var products = _productService.GetProductsByCategory(categoryId);
-            return PartialView("_ProductListPartial", products);
-        }
+        
     }
 }

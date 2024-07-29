@@ -1,5 +1,6 @@
 ﻿using EcommerceProject.Models;
-using EcommerceProject.Repositories;
+using EcommerceProject.Repositories.Interface;
+using EcommerceProject.Services.Interface;
 using System.Collections.Generic;
 
 namespace EcommerceProject.Services
@@ -13,14 +14,16 @@ namespace EcommerceProject.Services
             _productRepository = productRepository;
         }
 
-        public IEnumerable<ProductModel> GetAllProducts()
+      public IEnumerable<ProductModel> GetAllProducts()
+      {
+           return _productRepository.GetAllProducts();
+      }
+
+        public IEnumerable<ProductModel> GetFilteredProducts(List<int> categoryIds, List<int> brandIds)
         {
-            return _productRepository.GetAllProducts();
+            return _productRepository.GetFilteredProducts(categoryIds, brandIds);
         }
 
-        public IEnumerable<ProductModel> GetProductsByCategory(int categoryId)
-        {
-            return _productRepository.GetProductsByCategory(categoryId);
-        }
+
     }
 }

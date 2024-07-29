@@ -3,25 +3,37 @@ using EcommerceProject.Models.Dto;
 using EcommerceProject.Repositories;
 using Microsoft.AspNetCore.Identity;
 using MimeKit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace EcommerceProject.Services
 {
     public class AuthService
     {
         private readonly UserRepository _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(UserRepository userRepository)
+        public AuthService(UserRepository userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
-            
+            _httpContextAccessor = httpContextAccessor;
         }
-
 
         #region Login
         public async Task<Microsoft.AspNetCore.Identity.SignInResult> LoginAsync(LoginViewModel loginViewModel)
         {
-            return await _userRepository.PasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password, false, true);
+            var result = await _userRepository.PasswordSignInAsync(loginViewModel.UserName, loginViewModel.Password, false, true);
+            if (result.Succeeded)
+            {
+                var user = await _userRepository.FindByNameAsync(loginViewModel.UserName);
+                if (user != null)
+                {
+                    SetUserCookies(user.FirstName, user.LastName);
+                }
+            }
+            return result;
         }
         #endregion
 
@@ -29,6 +41,7 @@ namespace EcommerceProject.Services
         public async Task LogoutAsync()
         {
             await _userRepository.SignOutAsync();
+            RemoveUserCookies();
         }
         #endregion
 
@@ -40,7 +53,7 @@ namespace EcommerceProject.Services
         #endregion
 
         #region RegisterUser
-        public async Task<Microsoft.AspNetCore.Identity.IdentityResult> RegisterUserAsync(AppUserRegisterDto appUserRegisterDto)
+        public async Task<IdentityResult> RegisterUserAsync(AppUserRegisterDto appUserRegisterDto)
         {
             Random random = new Random();
             int code = random.Next(10000, 1000000);
@@ -62,7 +75,7 @@ namespace EcommerceProject.Services
                 await SendConfirmationEmailAsync(appUser.Email, code);
             }
 
-            return result ?? Microsoft.AspNetCore.Identity.IdentityResult.Failed(new IdentityError { Description = "Unknown error occurred." });
+            return result ?? IdentityResult.Failed(new IdentityError { Description = "Unknown error occurred." });
         }
         #endregion
 
@@ -88,7 +101,7 @@ namespace EcommerceProject.Services
         }
         #endregion
 
-
+        #region PasswordReset
         public async Task<string> GeneratePasswordResetTokenLinkAsync(string email, IUrlHelper urlHelper, HttpRequest request)
         {
             var user = await _userRepository.FindByEmailAsync(email);
@@ -126,15 +139,36 @@ namespace EcommerceProject.Services
             }
         }
 
-        public async Task<Microsoft.AspNetCore.Identity.IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        public async Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
         {
             var user = await _userRepository.FindByIdAsync(userId);
             if (user != null)
             {
                 return await _userRepository.ResetPasswordAsync(user, token, newPassword);
             }
-            return Microsoft.AspNetCore.Identity.IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            return IdentityResult.Failed(new IdentityError { Description = "User not found." });
         }
+        #endregion
+
+        #region CookieMethods
+        public void SetUserCookies(string firstName, string lastName)
+        {
+            var options = new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true
+            };
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("FirstName", firstName, options);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("LastName", lastName, options);
+        }
+
+        public void RemoveUserCookies()
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("FirstName");
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("LastName");
+        }
+        #endregion
     }
 }
-

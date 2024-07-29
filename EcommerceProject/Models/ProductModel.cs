@@ -1,21 +1,37 @@
-﻿namespace EcommerceProject.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EcommerceProject.Models
 {
     public class ProductModel
     {
+        [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; } // Optional
-        public int StockQuantity { get; set; } // Optional
-        public string Size { get; set; } // Optional
-        public string Color { get; set; } // Optional
 
-        // Foreign Key for Category
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public decimal Price { get; set; }
+
+        public string Description { get; set; }
+
+        [Required]
+        public int StockQuantity { get; set; }
+
+        [Required]
+        public string Size { get; set; }
+
+        [Required]
+        public string Color { get; set; }  // Ensure this property is required and has a value
+
+        [Required]
         public int CategoryId { get; set; }
+
         public CategoryModel Category { get; set; }
 
-        // Foreign Key for Brand
+        [Required]
         public int BrandId { get; set; }
+
         public BrandModel Brand { get; set; }
 
         public string ImageUrl { get; set; }

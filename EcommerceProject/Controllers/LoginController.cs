@@ -24,12 +24,22 @@ public class LoginController : Controller
         if (result.Succeeded)
         {
             var user = await _authService.FindByNameAsync(loginViewModel.UserName);
+
             if (user.EmailConfirmed)
             {
-                HttpContext.Session.SetString("UserName", user.FirstName + " " + user.LastName);
+                //Kullanıcı bilgileri doğruysa, kullanıcı bilgilerini cookie'ye atıyoruz.
+                _authService.SetUserCookies(user.FirstName, user.LastName);
                 return RedirectToAction("Index", "Home");
             }
         }
         return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await _authService.LogoutAsync();
+        _authService.RemoveUserCookies();
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -1,0 +1,165 @@
+﻿@model EcommerceProject.Models.ShopViewModel
+
+<body>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="./index.html">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+    <!-- Shop Section Begin -->
+    <div id="ajax-message" style="display:none; color:red;"></div>
+
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="shop__sidebar">
+                        <div class="shop__sidebar__search">
+                            <form action="#">
+                                <input type="text" placeholder="Search...">
+                                <button type="submit"><span class="icon_search"></span></button>
+                            </form>
+                        </div>
+                        <div class="shop__sidebar__accordion">
+                            <div class="accordion" id="accordionCategories">
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseCategories">Categories</a>
+                                    </div>
+                                    <div id="collapseCategories" class="collapse show" data-parent="#accordionCategories">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__categories">
+                                                <ul class="nice-scroll">
+                                                    @if (Model.Categories != null && Model.Categories.Any())
+                                                    {
+                                                        @foreach (var category in Model.Categories)
+                                                        {
+                                                            <li>
+                                                                <input type="checkbox" class="category-checkbox" data-category-id="@category.Id" id="category-@category.Id" />
+                                                                <label for="category-@category.Id">@category.Name (@category.Products.Count())</label>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>No categories available.</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-heading">
+                                        <a data-toggle="collapse" data-target="#collapseBrands">Brands</a>
+                                    </div>
+                                    <div id="collapseBrands" class="collapse show" data-parent="#accordionCategories">
+                                        <div class="card-body">
+                                            <div class="shop__sidebar__categories">
+                                                <ul class="nice-scroll">
+                                                    @if (Model.Brands != null && Model.Brands.Any())
+                                                    {
+                                                        @foreach (var brand in Model.Brands)
+                                                        {
+                                                            <li>
+                                                                <input type="checkbox" class="brand-checkbox" data-brand-id="@brand.Id" id="brand-@brand.Id" />
+                                                                <label for="brand-@brand.Id">@brand.Name</label>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>No brands available.</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Other filters and options -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div id="selected-filters">
+                        <h5>Selected Filters:</h5>
+                        <p>Categories: <span id="selected-categories"></span></p>
+                        <p>Brands: <span id="selected-brands"></span></p>
+                    </div>
+                    <div id="product-list">
+                        @Html.Partial("_ProductListPartial", Model.Products)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                // Handle category filter
+                $(".category-checkbox").change(function () {
+                    filterProducts();
+                });
+
+                // Handle brand filter
+                $(".brand-checkbox").change(function () {
+                    filterProducts();
+                });
+
+                function filterProducts() {
+                    var selectedCategories = $(".category-checkbox:checked").map(function () {
+                        return $(this).data("category-id");
+                    }).get();
+
+                    var selectedBrands = $(".brand-checkbox:checked").map(function () {
+                        return $(this).data("brand-id");
+                    }).get();
+
+                    // Display the selected filters
+                    $("#selected-categories").text(selectedCategories.join(", "));
+                    $("#selected-brands").text(selectedBrands.join(", "));
+
+                    console.log("Selected Categories: ", selectedCategories);
+                    console.log("Selected Brands: ", selectedBrands);
+
+                    $.ajax({
+                        url: '@Url.Action("GetFilteredProducts", "Shop")',
+                        type: 'GET',
+                        data: {
+                            categoryIds: selectedCategories, // Send as array
+                            brandIds: selectedBrands // Send as array
+                        },
+                        traditional: true, // Needed to correctly send array parameters
+                        success: function (result) {
+                            $("#ajax-message").css('color', 'green').text("AJAX Success: Products filtered successfully.").show();
+                            console.log("AJAX Success: ", result);
+                            $("#product-list").html(result);
+                        },
+                        error: function (xhr, status, error) {
+                            $("#ajax-message").css('color', 'red').text("AJAX Error: " + error).show();
+                            console.error("AJAX Error: ", error);
+                        }
+                    });
+                }
+            });
+        </script>
+    }
+</body>

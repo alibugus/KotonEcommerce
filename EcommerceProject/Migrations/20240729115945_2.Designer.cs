@@ -3,6 +3,7 @@ using EcommerceProject.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240729115945_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,11 +50,6 @@ namespace EcommerceProject.Migrations
                         {
                             Id = 2,
                             Name = "Brand2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Brand3"
                         });
                 });
 
@@ -81,16 +79,6 @@ namespace EcommerceProject.Migrations
                         {
                             Id = 2,
                             Name = "Category2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Category3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Category4"
                         });
                 });
 
@@ -168,58 +156,6 @@ namespace EcommerceProject.Migrations
                             Price = 20.0m,
                             Size = "L",
                             StockQuantity = 200
-                        },
-                        new
-                        {
-                            Id = 3,
-                            BrandId = 2,
-                            CategoryId = 1,
-                            Color = "Green",
-                            Description = "Description3",
-                            ImageUrl = "image3.jpg",
-                            Name = "Product3",
-                            Price = 15.0m,
-                            Size = "S",
-                            StockQuantity = 150
-                        },
-                        new
-                        {
-                            Id = 4,
-                            BrandId = 1,
-                            CategoryId = 2,
-                            Color = "Yellow",
-                            Description = "Description4",
-                            ImageUrl = "image4.jpg",
-                            Name = "Product4",
-                            Price = 25.0m,
-                            Size = "XL",
-                            StockQuantity = 250
-                        },
-                        new
-                        {
-                            Id = 5,
-                            BrandId = 1,
-                            CategoryId = 3,
-                            Color = "Black",
-                            Description = "Description5",
-                            ImageUrl = "image5.jpg",
-                            Name = "Product5",
-                            Price = 30.0m,
-                            Size = "M",
-                            StockQuantity = 300
-                        },
-                        new
-                        {
-                            Id = 6,
-                            BrandId = 3,
-                            CategoryId = 4,
-                            Color = "White",
-                            Description = "Description6",
-                            ImageUrl = "image6.jpg",
-                            Name = "Product6",
-                            Price = 35.0m,
-                            Size = "L",
-                            StockQuantity = 350
                         });
                 });
 

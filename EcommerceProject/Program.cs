@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using EcommerceProject.Services.Interface;
+using EcommerceProject.Repositories.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddSession(options =>
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -31,7 +34,8 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 
 // Register repositories
 builder.Services.AddScoped<UserRepository>();
-
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<IBrandService, BrandService>();
 // Register services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ConfirmMailService>();
