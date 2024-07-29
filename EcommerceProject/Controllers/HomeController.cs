@@ -24,10 +24,12 @@ namespace EcommerceProject.Controllers
             var products = _productService.GetAllProducts();
             var categories = _categoryService.GetAllCategories();
             var viewModel = new HomeViewModel
+            
             {
                 Products = products,
                 Categories = categories
             };
+            ViewBag.UserName = TempData["UserName"];
             return View(viewModel);
         }
 

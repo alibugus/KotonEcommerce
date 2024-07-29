@@ -1,104 +1,158 @@
-﻿
-@{
-    Layout = null;
-}
-
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #333333;
+            font-family: 'Arial', sans-serif;
+        }
 
-    <link rel="stylesheet" href="login/fonts/icomoon/style.css">
+        .register-container {
+            margin-top: 5%;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-    <link rel="stylesheet" href="login/css/owl.carousel.min.css">
+            .register-container h3 {
+                margin-bottom: 30px;
+                text-align: center;
+                color: #333333;
+            }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="login/css/bootstrap.min.css">
+        .form-control {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
 
-    <!-- Style -->
-    <link rel="stylesheet" href="login/css/style.css">
+            .form-control:focus {
+                background-color: #ffffff;
+                color: #495057;
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+            }
 
-    <title>Register</title>
+        .btn-primary {
+            background-color: #333333;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+            .btn-primary:hover {
+                background-color: #555555;
+            }
+
+        .social-login a {
+            font-size: 1.2rem;
+            margin: 0 5px;
+            color: #ffffff;
+        }
+
+            .social-login a:hover {
+                color: #007bff;
+            }
+
+        .google-btn {
+            width: 100%;
+            background-color: #ffffff;
+            color: #333333;
+            border: 1px solid #ced4da;
+            padding: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+            .google-btn img {
+                width: 20px;
+                margin-right: 10px;
+            }
+
+            .google-btn:hover {
+                background-color: #f8f9fa;
+            }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+    </style>
 </head>
 <body>
-
-    <div class="content">
+    <section id="form">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 contents">
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <div class="form-block">
-                                <div class="mb-4">
-                                    <h3>Sign Up to <strong>Colorlib</strong></h3>
-                                    <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                <div class="register-container">
+                    <h3>Register <strong>Ali</strong></h3>
+                    <form asp-action="Index" asp-controller="Register" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username">Kullanıcı Adı</label>
+                                    <input type="text" class="form-control" id="username" name="UserName" required>
                                 </div>
-                                <form asp-action="Index" asp-controller="Register" method="post">
-                                    <div class="form-group first">
-                                        <label for="username">Kullanıcı Adı</label>
-                                        <input type="text" class="form-control" id="Username" name="UserName" required>
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="firstname">Adınız</label>
-                                        <input type="text" class="form-control" id="Firstname" name="FirstName" required>
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="lastname">Soy Adınız</label>
-                                        <input type="text" class="form-control" id="Lastname" name="LastName" required>
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="city">Şehir</label>
-                                        <input type="text" class="form-control" id="City" name="City" required>
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="Email" name="Email" required>
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="phone">Telefon Numarası</label>
-                                        <input type="tel" class="form-control" id="PhoneNumber" name="PhoneNumber" required>
-                                    </div>
-                                    <div class="form-group last mb-4">
-                                        <label for="password">Şifre</label>
-                                        <input type="password" class="form-control" id="Password" name="Password" required>
-                                    </div>
-                                    <div class="form-group last mb-4">
-                                        <label for="confirm-password">Şifre Tekrar</label>
-                                        <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
-                                    </div>
-
-                                    <input type="submit" value="Sign Up" class="btn btn-pill text-white btn-block btn-primary">
-
-                                    <span class="d-block text-center my-4 text-muted"> or sign up with</span>
-
-                                    <div class="social-login text-center">
-                                        <a href="#" class="facebook">
-                                            <span class="icon-facebook mr-3"></span>
-                                        </a>
-                                        <a href="#" class="twitter">
-                                            <span class="icon-twitter mr-3"></span>
-                                        </a>
-                                        <a href="#" class="google">
-                                            <span class="icon-google mr-3"></span>
-                                        </a>
-                                    </div>
-                                </form>
+                                <div class="form-group">
+                                    <label for="firstname">Adınız</label>
+                                    <input type="text" class="form-control" id="firstname" name="FirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastname">Soy Adınız</label>
+                                    <input type="text" class="form-control" id="lastname" name="LastName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">Şehir</label>
+                                    <input type="text" class="form-control" id="city" name="City" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Telefon Numarası</label>
+                                    <input type="tel" class="form-control" id="phone" name="PhoneNumber" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Şifre</label>
+                                    <input type="password" class="form-control" id="password" name="Password" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="confirm-password">Şifre Tekrar</label>
+                                    <input type="password" class="form-control" id="confirm-password" name="ConfirmPassword" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                        <div class="text-center mt-4">
+                            <span class="text-muted">or sign up with</span>
+                            <div class="social-login mt-3">
+                                <a asp-controller="GoogleSignIn" asp-action="GoogleLogin" class="google-btn">
+                                    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo">
+                                    Sign Up With Google
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
             </div>
         </div>
-    </div>
-
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    </section>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

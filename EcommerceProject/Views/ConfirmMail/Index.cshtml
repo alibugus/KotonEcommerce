@@ -1,27 +1,96 @@
 ﻿@model EcommerceProject.Models.ConfirmUser
 @{
     ViewData["Title"] = "Index";
-    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail Onaylama Formu</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #333333;
+            font-family: 'Arial', sans-serif;
+        }
 
-<h1>Mail Onaylama Formu</h1>
-<form method="post" asp-action="Index" asp-controller="ConfirmMail">
-    <div class="form-group">
-        <h2>Onay Formundaki Gönderilen Mail Adresiniz: @ViewBag.Email</h2>
-        <input class="form-control" type="text" value="@ViewBag.Email" asp-for="Email" readonly />
-    </div>
-    <div class="form-group">
-        <h2>Onay Kodunuzu Girin</h2>
-        <input class="form-control" type="text" asp-for="ConfirmCode" />
-    </div>
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit">Hesabı Onayla</button>
-    </div>
-</form>
+        .confirmation-container {
+            margin-top: 5%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-@if (ViewData["Message"] != null)
-{
-    <div class="alert alert-success">
-        @ViewData["Message"]
-    </div>
-}
+            .confirmation-container h1, .confirmation-container h2 {
+                color: #333333;
+            }
+
+        .form-control {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
+
+            .form-control:focus {
+                background-color: #ffffff;
+                color: #495057;
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+            }
+
+        .btn-primary {
+            background-color: #333333;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+            .btn-primary:hover {
+                background-color: #555555;
+            }
+
+        .alert-success {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section id="form">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="confirmation-container">
+                    <h1>Mail Onaylama Formu</h1>
+                    <form method="post" asp-action="Index" asp-controller="ConfirmMail">
+                        <div class="form-group">
+                            <h2>Onay Formundaki Gönderilen Mail Adresiniz:</h2>
+                            <input class="form-control" type="text" value="@ViewBag.Email" asp-for="Email" readonly />
+                        </div>
+                        <div class="form-group">
+                            <h2>Onay Kodunuzu Girin</h2>
+                            <input class="form-control" type="text" asp-for="ConfirmCode" />
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Hesabı Onayla</button>
+                        </div>
+                    </form>
+                    @if (ViewData["Message"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @ViewData["Message"]
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

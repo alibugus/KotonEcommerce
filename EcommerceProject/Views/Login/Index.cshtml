@@ -1,79 +1,140 @@
 ﻿@model EcommerceProject.Models.LoginViewModel
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0; /* Daha açık bir arka plan rengi */
+            color: #333333;
+            font-family: 'Arial', sans-serif;
+        }
 
-<style>
-	body {
-		background-color: #f8f9fa;
-		margin: 0 auto;
-	}
+        .login-container {
+            margin-top: 10%;
+            max-width: 400px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-	.login-container {
-		margin-top: 5%;
-		margin-bottom: 30%;
-		margin-left: 30%;
-		max-width: 500px;
-		background-color: #fff;
-		padding: 30px;
-		border-radius: 10px;
-		box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-	}
+            .login-container h2 {
+                margin-bottom: 30px;
+                text-align: center;
+                color: #333333;
+            }
 
-	.social-login a {
-		font-size: 1.5rem;
-		margin: 0 10px;
-		color: #495057;
-	}
+        .form-control {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
 
-		.social-login a:hover {
-			color: #007bff;
-		}
+            .form-control:focus {
+                background-color: #ffffff;
+                color: #495057;
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+            }
 
-	.forgot-pass {
-		color: #007bff;
-	}
+        .btn-primary {
+            background-color: #333333;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
 
-		.forgot-pass:hover {
-			text-decoration: underline;
-		}
+            .btn-primary:hover {
+                background-color: #555555;
+            }
 
-	.btn-primary {
-		background-color: #007bff;
-		border: none;
-	}
-</style>
-	<section id="form">
-		<!--form-->
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="login-container">
-					<h2 class="text-center mb-4">Log In</h2>
-					<form asp-action="Index" asp-controller="Login" method="post">
-						<div class="form-group">
-							<label for="username">Username</label>
-							<input type="text" asp-for="UserName" class="form-control" id="username">
-						</div>
-						<div class="form-group">
-							<label for="password">Password</label>
-							<input type="password" class="form-control" asp-for="Password" id="password">
-						</div>
-						<div class="form-group form-check d-flex justify-content-between align-items-center">
-							<input type="checkbox" class="form-check-input" id="rememberMe" checked="checked">
-							<label class="form-check-label" for="rememberMe">Remember me</label>
-							<a href="#" class="forgot-pass">Forgot Password?</a>
-						</div>
-						<button type="submit" class="btn btn-primary btn-block">Log In</button>
-						<div class="text-center mt-4">
-							<span class="text-muted">or sign in with</span>
-							<div class="social-login mt-2">
-								
-								<a class="btn btn-info mt-2" asp-controller="GoogleSignIn" asp-action="GoogleLogin">Log In With Google</a>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	</section><!--/form-->
+        .forgot-pass {
+            color: #007bff;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+        }
+
+            .forgot-pass:hover {
+                text-decoration: underline;
+            }
+
+        .social-login a {
+            font-size: 1.2rem;
+            margin: 0 5px;
+            color: #ffffff;
+        }
+
+            .social-login a:hover {
+                color: #007bff;
+            }
+
+        .google-btn {
+            width: 100%;
+            background-color: #ffffff;
+            color: #333333;
+            border: 1px solid #ced4da;
+            padding: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+            .google-btn img {
+                width: 20px;
+                margin-right: 10px;
+            }
+
+            .google-btn:hover {
+                background-color: #f8f9fa;
+            }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+    </style>
+</head>
+<body>
+    <section id="form">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="login-container">
+                    <h2>Log In</h2>
+                    <form asp-action="Index" asp-controller="Login" method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" asp-for="UserName" class="form-control" id="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" asp-for="Password" id="password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Log In</button>
+                        <a href="#" class="forgot-pass">Forgot Password?</a>
+                        <div class="text-center mt-4">
+                            <span class="text-muted">or sign in with</span>
+                            <a class="google-btn mt-3" asp-controller="GoogleSignIn" asp-action="GoogleLogin">
+                                <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo">
+                                Log In With Google
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

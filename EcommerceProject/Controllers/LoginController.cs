@@ -26,7 +26,8 @@ public class LoginController : Controller
             var user = await _authService.FindByNameAsync(loginViewModel.UserName);
             if (user.EmailConfirmed)
             {
-                return RedirectToAction("Index", "MyAccount");
+                HttpContext.Session.SetString("UserName", user.FirstName + " " + user.LastName);
+                return RedirectToAction("Index", "Home");
             }
         }
         return View();
