@@ -1,6 +1,7 @@
 ﻿using EcommerceProject.Database;
 using EcommerceProject.Models;
 using EcommerceProject.Repositories.Interface;
+using Microsoft.CodeAnalysis;
 
 namespace EcommerceProject.Repositories
 {
@@ -18,7 +19,10 @@ namespace EcommerceProject.Repositories
 			return _context.Products.ToList();
 			
 		}
+		public ProductModel GetProductById(int id) {
 
+           return _context.Products.FirstOrDefault(p => p.Id == id);
+        }
         public IEnumerable<ProductModel> GetFilteredProducts(List<int> categoryIds, List<int> brandIds)
         {
             return _context.Products.Where(p =>

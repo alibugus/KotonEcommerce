@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EcommerceProject.Models.OrderModel>
+
+<section class="order-list spad">
+    <div class="container">
+        <div class="order-list__content">
+            <h4 class="order-list__title">My Orders</h4>
+            <table class="order-list__table order-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var order in Model)
+                    {
+                        
+                        <tr>
+                            
+                            <td>@order.Id</td>
+                            <td>@order.OrderDate.ToShortDateString()</td>
+                            <td>@order.OrderDetails.Sum(d => d.Quantity * d.Price).ToString("C")</td>
+                            <td>@order.OrderDetails.Sum(d => d.Quantity * d.Price).ToString("C")</td>
+                            <td>Processing</td>
+                            <td>
+                                <button onclick="Sendid(@order.Id)"class="site-btn view-details" >View</button>
+                            </td>
+                        </tr>
+                    
+                       
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+@section Scripts {
+        <<script type="text/javascript">
+             function Sendid(OrderId) {
+                 window.location.href = '@Url.Action("IndexGet", "OrderDetail")?OrderId=' + OrderId;
+             }
+    </script>
+
+}
+

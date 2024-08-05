@@ -1,0 +1,24 @@
+﻿@model EcommerceProject.Models.OrderModel
+
+<section class="order-details spad">
+    <div class="container">
+        <div class="order-details__content">
+            <h4 class="order-details__title">Order Details</h4>
+            <div class="order-details__info">
+                <p><strong>Order ID:</strong> @Model.Id</p>
+                <p><strong>Date:</strong> @Model.OrderDate.ToShortDateString()</p>
+                <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Address:</strong> @Model.Address, @Model.City, @Model.State, @Model.ZipCode</p>
+                <p><strong>Phone:</strong> @Model.Phone</p>
+                <p><strong>Order Notes:</strong> @Model.OrderNotes</p>
+            </div>
+
+            <h5 class="order-details__products-title">Ordered Products</h5>
+            <ul class="order-details__products">
+            </ul>
+
+
+        </div>
+    </div>
+</section>

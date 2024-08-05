@@ -12,16 +12,16 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
           rel="stylesheet">
-
     <!-- Css Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css" media="screen" runat="server">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" runat="server">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     
  
 </head>
@@ -51,8 +51,8 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href="#"><img src="img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
+            <a href=@Url.Action("Index","WishList")><img src="img/icon/heart.png" alt=""></a>
+            <a href=@Url.Action("Index","ShopCart")><img src="img/icon/cart.png" alt=""> <span>0</span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -90,7 +90,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href=@Url.Action("Index","Home")><img src="img/logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-9">
@@ -140,8 +140,8 @@
                     </nav>
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="img/icon/search.png" alt="" style="width: 24px; height: 24px;"></a>
-                        <a href="#"><img src="img/icon/heart.png" alt="" style="width: 24px; height: 24px;"></a>
-                        <a href="#"><img src="img/icon/cart.png" alt="" style="width: 24px; height: 24px;"> <span>0</span></a>
+                        <a href=@Url.Action("Index","WishList")><img src="img/icon/heart.png" alt="" style="width: 24px; height: 24px;"></a>
+                        <a href=@Url.Action("Index","ShopCart")><img src="img/icon/cart.png" alt="" style="width: 24px; height: 24px;"> <span>0</span></a>
                         <div class="price">$0.00</div>
                         <div class="dropdown user-icon">
                             <a href="#" class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -152,6 +152,9 @@
                                 {
                                     <a class="dropdown-item">
                                         @Context.Request.Cookies["FirstName"] @Context.Request.Cookies["LastName"]
+                                    </a>
+                                    <a href="@Url.Action("Index","Order")" class="dropdown-item">
+                                        Siparişlerim
                                     </a>
                                     <form method="post" action="@Url.Action("Logout", "Login")" class="dropdown-item">
                                         <button type="submit" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
@@ -271,7 +274,9 @@
     <!-- jQuery kütüphanesi -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS kütüphanesi -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+  
 
 	@RenderSection("Scripts", required: false)
 </body>

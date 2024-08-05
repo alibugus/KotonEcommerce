@@ -8,7 +8,7 @@ namespace EcommerceProject.Models
         public string? LastName { get; set; }
         public string? City { get; set; }
         public int ConfirmCode { get; set; }
-        public ICollection<WishlistModel> Wishlists { get; set; }
+        
         
     }
 }

@@ -1,0 +1,89 @@
+﻿@model GuestCheckoutViewModel
+
+<section class="breadcrumb-option">
+    <!-- Breadcrumb Section -->
+</section>
+
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <form asp-action="PlaceOrder" asp-controller="GuestCheckout">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <h6 class="checkout__title">Billing Details</h6>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    <input asp-for="Order.FirstName" type="text">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    <input asp-for="Order.LastName" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Country<span>*</span></p>
+                            <input asp-for="Order.Country" type="text">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Address<span>*</span></p>
+                            <input asp-for="Order.Address" type="text" placeholder="Street Address" class="checkout__input__add">
+                            <input type="text" placeholder="Apartment, suite, unit etc (optional)">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Town/City<span>*</span></p>
+                            <input asp-for="Order.City" type="text">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Country/State<span>*</span></p>
+                            <input asp-for="Order.State" type="text">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Postcode / ZIP<span>*</span></p>
+                            <input asp-for="Order.ZipCode" type="text">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input asp-for="Order.Phone" type="text">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    <input asp-for="Order.Email" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Order notes<span>*</span></p>
+                            <input asp-for="Order.OrderNotes" type="text" placeholder="Notes about your order, e.g. special notes for delivery.">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                            <div class="checkout__order__products">Product <span>Total</span></div>
+                            <ul class="checkout__total__products">
+                                @foreach (var item in Model.CartItems)
+                                {
+                                    <li>@item.Product.Name <span>@item.Quantity</span></li>
+                                }
+                            </ul>
+                            <ul class="checkout__total__all">
+                                <li>Subtotal <span>@Model.CartItems.Sum(i => i.Product.Price * i.Quantity).ToString("C")</span></li>
+                                <li>Total <span>@Model.CartItems.Sum(i => i.Product.Price * i.Quantity).ToString("C")</span></li>
+                            </ul>
+                            <button type="submit" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

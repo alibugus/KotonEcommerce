@@ -109,6 +109,29 @@ ol {
 /*---------------------
   Helper CSS
 -----------------------*/
+.order-table {
+	width: 100%;
+	border-collapse: separate; /* Ensures borders between cells */
+	border-spacing: 10px; /* Adds space between cells */
+}
+
+	.order-table th, .order-table td {
+		padding: 10px; /* Adds space inside each cell */
+		text-align: left; /* Aligns text to the left */
+	}
+
+	.order-table th {
+		background-color: #f2f2f2; /* Optional: Adds a background color for header cells */
+	}
+
+.cart__close {
+	cursor: pointer; /* Fare işaretçisini el simgesine çevirir */
+	transition: color 0.3s ease; /* Renk değişiminde geçiş animasyonu */
+}
+
+.cart__close:hover {
+	color: red; /* Üzerine gelindiğinde rengi kırmızıya çevirir */
+}
 
 .section-title {
 	margin-bottom: 45px;

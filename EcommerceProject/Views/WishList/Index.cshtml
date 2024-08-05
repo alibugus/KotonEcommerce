@@ -1,0 +1,140 @@
+﻿@model List<WishListModel>
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Wishlist</h4>
+                    <div class="breadcrumb__links">
+                        <a href="@Url.Action("Index","Home")">Home</a>
+                        <a href="@Url.Action("Index","Shop")">Shop</a>
+                        <span>Wishlist</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                 <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__pic">
+                                            <img src="@item.Product.ImageUrl" alt="">
+                                        </div>
+                                        <div class="product__cart__item__text">
+                                            <h6>@item.Product.Name</h6>
+                                            <h5>@item.Product.Price.ToString("C")</h5>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">@((item.Product.Price).ToString("C"))</td>
+                                    <td>
+                                        <button type="button" onclick="RemoveProductFromCart(@item.Product.Id)" class="btn btn-danger btn-sm cart-close-btn">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="@Url.Action("Index", "Shop")">Continue Shopping</a>
+                        </div>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
+<!-- Ensure jQuery is loaded -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<style>
+    .cart-close-btn {
+        padding: 2px 5px; /* Further reduced padding */
+        font-size: 0.8rem; /* Further reduced font size */
+    }
+
+        .cart-close-btn:hover {
+            background-color: #ff5a5a; /* Custom hover color */
+        }
+
+    .quantity-container {
+        display: flex;
+        align-items: center; /* Center items vertically */
+        justify-content: center; /* Center items horizontally */
+    }
+
+        .quantity-container input {
+            width: 50px; /* Adjust width as needed */
+            text-align: center; /* Center text within the input */
+            border: none; /* Remove the border */
+            background-color: #f0f0f0; /* Optional: add background color */
+            margin-right: 5px; /* Space between input and button */
+            margin-left: 5px;
+            font-size: 1rem; /* Adjust font size as needed */
+        }
+
+    .quantity-btn {
+        font-size: 1rem; /* Adjust font size as needed */
+        padding: 3px 5px; /* Adjust padding as needed */
+        cursor: pointer; /* Show a pointer cursor on hover */
+        border: none; /* Remove border */
+        background-color: #f0f0f0; /* Button background color */
+        color: black; /* Button text color */
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    }
+
+        .quantity-btn:hover {
+            background-color: grey; /* Darker color on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+        }
+
+</style>
+
+<script type="text/javascript">
+    function RemoveProductFromCart(productId) {
+        $.ajax({
+            url: '@Url.Action("RemoveProductFromWishList", "WishList")',
+            type: 'POST',
+            data: { 'ProductId': productId},
+             dataType:'json',
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                    console.log(productId);
+                } else {
+                    $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
+            }
+        });
+    }
+
+     
+</script>

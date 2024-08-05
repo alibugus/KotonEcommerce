@@ -19,6 +19,10 @@ namespace EcommerceProject.Services
            return _productRepository.GetAllProducts();
       }
 
+        public ProductModel GetProductById(int id)
+        {
+            return _productRepository.GetProductById(id);
+        }
         public IEnumerable<ProductModel> GetFilteredProducts(List<int> categoryIds, List<int> brandIds)
         {
             return _productRepository.GetFilteredProducts(categoryIds, brandIds);

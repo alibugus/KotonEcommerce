@@ -11,7 +11,7 @@
                         <span class="label">Out of Stock</span>
                     }
                     <ul class="product__hover">
-                        <li><a href="#"><img src="img/icon/heart.png" alt="Add to Wishlist"></a></li>
+                        <li><a href="" onclick="AddToWishList(@product.Id)"><img src="img/icon/heart.png" alt="Add to Wishlist"></a></li>
                         <li>
                             <a href="#"><img src="img/icon/compare.png" alt="Compare"> <span>Compare</span></a>
                         </li>
@@ -20,7 +20,8 @@
                 </div>
                 <div class="product__item__text">
                     <h6>@product.Name</h6>
-                    <a href="#" class="add-cart">+ Add To Cart</a>
+                    <a href="" class="add-cart" onclick="AddToCart(@product.Id, 1)">+ Add To Cart</a>
+
                     <div class="rating">
                         @for (int i = 0; i < 5; i++)
                         {
@@ -45,3 +46,57 @@
         </div>
     }
 </div>
+
+<div id="feedback" style="margin-top: 20px;"></div>
+
+<!-- Ensure jQuery is loaded -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    function AddToCart(productId, quantity) 
+    {
+        console.log("AddToCart called with productId:", productId, "quantity:", quantity);
+        $.ajax({
+            url: '@Url.Action("AddToCart", "ShopCart")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ ProductId: productId, Quantity: quantity }),
+            success: function (response) {
+                if (response.success) {
+                    $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                } else {
+                    $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
+            }
+        });
+    }
+
+    function AddToWishList(productId)
+    {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+        console.log("AddToWishList called with productId:", productId); 
+        $.ajax({
+            url: '@Url.Action("AddToCart", "WishList")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ ProductId: productId, Quantity: 1 }),
+            success: function (response) {
+                if (response.success) {
+                    console.log("ProductId in success response:", productId);
+                    $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                } else {
+                    console.log("ProductId in error response:", productId);
+                    $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("ProductId in error handler:", productId);
+                $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
+            }
+        });
+    }
+</script>
