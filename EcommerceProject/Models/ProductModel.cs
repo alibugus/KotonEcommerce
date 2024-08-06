@@ -33,7 +33,6 @@ namespace EcommerceProject.Models
         public int BrandId { get; set; }
 
         public BrandModel Brand { get; set; }
-
         public string ImageUrl { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace EcommerceProject.Services.Interface
         OrderModel GetOrderById(int orderId);
         IEnumerable<OrderModel> GetOrdersByUserId(int userId); // Kullanıcı ID'sine göre siparişleri getirme
         void AddOrderDetail(OrderDetailModel orderDetail);
+        IEnumerable<ProductModel> GetOrderProducts(int orderId);
     }
 }

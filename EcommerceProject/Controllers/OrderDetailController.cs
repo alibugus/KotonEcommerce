@@ -34,11 +34,17 @@ namespace EcommerceProject.Controllers
         public IActionResult IndexGet(int OrderId)
         {
             var order = _orderService.GetOrderById(OrderId);
+            var products = _orderService.GetOrderProducts(OrderId);
+            var orderdetailviewmodel = new OrderDetailViewModel
+            {
+                Order = order,
+                Product = products
+            };
             if (order == null)
             {
                 return NotFound();
             }
-            return View("Index", order);
+            return View("Index", orderdetailviewmodel);
         }
     }
 }

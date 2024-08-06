@@ -23,6 +23,9 @@ namespace EcommerceProject.Repositories
 
            return _context.Products.FirstOrDefault(p => p.Id == id);
         }
+        public IEnumerable<ProductModel> GetProductsByIds(IEnumerable<int> productIds)
+        {             return _context.Products.Where(p => productIds.Contains(p.Id)).ToList();
+        }
         public IEnumerable<ProductModel> GetFilteredProducts(List<int> categoryIds, List<int> brandIds)
         {
             return _context.Products.Where(p =>

@@ -15,7 +15,10 @@ namespace EcommerceProject.Repositories
         {
             _context = context;
         }
-
+        public IEnumerable<ProductModel> GetProductsByIds(IEnumerable<int> productIds)
+        {
+            return _context.Products.Where(p => productIds.Contains(p.Id)).ToList();
+        }
         public void AddOrder(OrderModel order)
         {
             _context.Orders.Add(order);

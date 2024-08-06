@@ -80,5 +80,10 @@ namespace EcommerceProject.Services
                 SaveWishList(wishList);
             }
         }
+        public bool IsProductInWishList(int productId)
+        {
+            var wishList = GetWishList();
+            return wishList.Any(item => item.Product.Id == productId);
+        }
     }
 }

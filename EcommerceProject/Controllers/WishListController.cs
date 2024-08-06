@@ -15,6 +15,7 @@ namespace EcommerceProject.Controllers
             _wishListService = wishListService;
             _productService = productService;
         }
+
         public IActionResult Index()
         {
             var wishlist = _wishListService.GetWishList();
@@ -22,7 +23,7 @@ namespace EcommerceProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToCart([FromBody] AddToCartRequestModel model)
+        public IActionResult AddToWishList([FromBody] AddToCartRequestModel model)
         {
             Console.WriteLine("Received ProductId: " + model.ProductId);
             var product = _productService.GetProductById(model.ProductId);
@@ -36,15 +37,20 @@ namespace EcommerceProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveProductFromWishList( int ProductId)
+        public IActionResult RemoveProductFromWishList(int ProductId)
         {
-           var a = ProductId;
-            //Console.WriteLine("Received ProductId: " + model.ProductId);
-            //_wishListService.RemoveProductFromWishList(model.ProductId);
+            var a = ProductId;
+            Console.WriteLine("Received ProductId: " + ProductId);
+            _wishListService.RemoveProductFromWishList(ProductId);
             return Json(new { success = true, message = "Product removed from wishlist successfully!" });
         }
 
-        
-
+        [HttpPost]
+        public JsonResult IsProductInWishList(int productId)
+        {
+            var isInWishList = _wishListService.IsProductInWishList(productId);
+            return Json(new { inWishList = isInWishList });
+        }
+  
     }
 }

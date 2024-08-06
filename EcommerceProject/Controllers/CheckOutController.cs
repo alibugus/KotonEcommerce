@@ -60,16 +60,18 @@ namespace EcommerceProject.Controllers
                 selectedAddress = new AddressModel
                 {
                     UserId = user.Id,
-                    Country = model.NewAddressCountry,
-                    Address = model.NewAddressLine,
-                    City = model.NewAddressCity,
-                    State = model.NewAddressState,
-                    ZipCode = model.NewAddressZipCode
+                    Country = model.Country,
+                    Address = model.Address,
+                    City = model.City,
+                    State = model.State,
+                    ZipCode = model.ZipCode,
+                    User = user
+
                 };
                 if (string.IsNullOrEmpty(selectedAddress.Address))
                 {
                     ModelState.AddModelError("", "Address cannot be empty.");
-                    return View("Index", model);  // Return to the form with the error
+                    return View("Index", model);  
                 }
                 _addressService.AddAddress(selectedAddress);
             }

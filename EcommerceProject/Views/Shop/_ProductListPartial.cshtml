@@ -1,9 +1,9 @@
-﻿@model IEnumerable<EcommerceProject.Models.ProductModel>
+﻿@model EcommerceProject.Models.ShopViewModel
 
 <div class="row">
-    @foreach (var product in Model)
+    @foreach (var product in Model.Products)
     {
-        <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="col-lg-4 col-md-6 col-sm-6" data-product-id="@product.Id">
             <div class="product__item @(product.StockQuantity > 0 ? "" : "out-of-stock")">
                 <div class="product__item__pic set-bg" data-setbg="@product.ImageUrl">
                     @if (product.StockQuantity <= 0)
@@ -11,9 +11,16 @@
                         <span class="label">Out of Stock</span>
                     }
                     <ul class="product__hover">
-                        <li><a href="" onclick="AddToWishList(@product.Id)"><img src="img/icon/heart.png" alt="Add to Wishlist"></a></li>
                         <li>
-                            <a href="#"><img src="img/icon/compare.png" alt="Compare"> <span>Compare</span></a>
+                            <a href="" onclick="AddToWishList(@product.Id)">
+                                <img class="wishlist-icon" src="img/icon/heart.png" alt="Add to Wishlist">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <img src="img/icon/compare.png" alt="Compare">
+                                <span>Compare</span>
+                            </a>
                         </li>
                         <li><a href="#"><img src="img/icon/search.png" alt="Search"></a></li>
                     </ul>
@@ -21,7 +28,6 @@
                 <div class="product__item__text">
                     <h6>@product.Name</h6>
                     <a href="" class="add-cart" onclick="AddToCart(@product.Id, 1)">+ Add To Cart</a>
-
                     <div class="rating">
                         @for (int i = 0; i < 5; i++)
                         {
@@ -30,7 +36,6 @@
                     </div>
                     <h5>@product.Price.ToString("C")</h5>
                     <div class="product__color__select">
-                        <!-- Example colors - these should be dynamic based on your data -->
                         <label for="pc-@product.Id-1">
                             <input type="radio" id="pc-@product.Id-1" @(product.Color == "Black" ? "checked" : "")>
                         </label>
@@ -53,9 +58,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.product__item').each(function () {
+                var productId = $(this).closest('div[data-product-id]').data('product-id');
+                console.log("Product ID:", productId);
+                checkIfProductInWishList(productId, $(this));
+            });
+        }, 100);
+    });
 
-    function AddToCart(productId, quantity) 
-    {
+    function AddToCart(productId, quantity) {
         console.log("AddToCart called with productId:", productId, "quantity:", quantity);
         $.ajax({
             url: '@Url.Action("AddToCart", "ShopCart")',
@@ -75,19 +88,40 @@
         });
     }
 
-    function AddToWishList(productId)
-    {
-        event.preventDefault(); // Prevent the default behavior of the anchor tag
-        console.log("AddToWishList called with productId:", productId); 
+    function checkIfProductInWishList(productId, productElement) {
         $.ajax({
-            url: '@Url.Action("AddToCart", "WishList")',
+            url: '@Url.Action("IsProductInWishList", "WishList")',
+            type: 'POST',
+            dataType:'json',
+            data: { productId: productId },
+            success: function (response) {
+                if (response.inWishList) {
+                    console.log("check "+productId)
+                    productElement.find('.wishlist-icon').attr('src', 'img/icon/heart-filled.png');
+                } else {
+                    console.log("checkme" + productId)
+                    productElement.find('.wishlist-icon').attr('src', 'img/icon/heart.png');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function AddToWishList(productId) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+        console.log("AddToWishList called with productId:", productId);
+        $.ajax({
+            url: '@Url.Action("AddToWishList", "WishList")',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ ProductId: productId, Quantity: 1 }),
+            data: JSON.stringify({ ProductId: productId }),
             success: function (response) {
                 if (response.success) {
                     console.log("ProductId in success response:", productId);
                     $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                    $('div[data-product-id="' + productId + '"] .wishlist-icon').attr('src', 'img/icon/heart-filled.png');
                 } else {
                     console.log("ProductId in error response:", productId);
                     $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');

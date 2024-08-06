@@ -43,8 +43,11 @@ namespace EcommerceProject.Controllers
             _logger.LogInformation("Received Brand IDs: " + string.Join(", ", brandIds ?? new List<int>()));
 
             var filteredProducts = _productService.GetFilteredProducts(categoryIds, brandIds);
-
-            return PartialView("_ProductListPartial", filteredProducts);
+            var viewModel = new ShopViewModel
+            {
+                Products = filteredProducts
+            };
+            return PartialView("_ProductListPartial", viewModel);
         }
     }
 }

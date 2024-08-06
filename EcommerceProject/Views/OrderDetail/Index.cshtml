@@ -1,20 +1,30 @@
-﻿@model EcommerceProject.Models.OrderModel
+﻿@model EcommerceProject.Models.OrderDetailViewModel
 
 <section class="order-details spad">
     <div class="container">
         <div class="order-details__content">
             <h4 class="order-details__title">Order Details</h4>
             <div class="order-details__info">
-                <p><strong>Order ID:</strong> @Model.Id</p>
-                <p><strong>Date:</strong> @Model.OrderDate.ToShortDateString()</p>
-                <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
-                <p><strong>Email:</strong> @Model.Email</p>
-                <p><strong>Address:</strong> @Model.Address, @Model.City, @Model.State, @Model.ZipCode</p>
-                <p><strong>Phone:</strong> @Model.Phone</p>
-                <p><strong>Order Notes:</strong> @Model.OrderNotes</p>
+                <p><strong>Order ID:</strong> @Model.Order.Id</p>
+                <p><strong>Date:</strong> @Model.Order.OrderDate.ToShortDateString()</p>
+                <p><strong>Name:</strong> @Model.Order.FirstName @Model.Order.LastName</p>
+                <p><strong>Email:</strong> @Model.Order.Email</p>
+                <p><strong>Address:</strong> @Model.Order.Address, @Model.Order.City, @Model.Order.State, @Model.Order.ZipCode</p>
+                <p><strong>Phone:</strong> @Model.Order.Phone</p>
+                <p><strong>Order Notes:</strong> @Model.Order.OrderNotes</p>
+                
             </div>
 
             <h5 class="order-details__products-title">Ordered Products</h5>
+            @foreach (var item in Model.Product)
+            {
+                <ul>
+                    <li>@item.Name</li>
+                    <li>@item.Price</li>
+                    <li>>@item.Brand</li>
+
+                </ul>
+            }
             <ul class="order-details__products">
             </ul>
 

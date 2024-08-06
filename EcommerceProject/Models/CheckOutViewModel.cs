@@ -19,11 +19,6 @@ namespace EcommerceProject.Models
         public List<AddressModel> SavedAddresses { get; set; }
         public int SelectedAddressId { get; set; }
 
-        // New address fields
-        public string NewAddressCountry { get; set; }
-        public string NewAddressLine { get; set; }
-        public string NewAddressCity { get; set; }
-        public string NewAddressState { get; set; }
-        public string NewAddressZipCode { get; set; }
+     
     }
 }

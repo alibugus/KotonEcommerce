@@ -9,5 +9,6 @@ namespace EcommerceProject.Repositories.Interface
         IEnumerable<OrderModel> GetAllOrders();
         OrderModel GetOrderById(int orderId);
         IEnumerable<OrderModel> GetOrdersByUserId(int userId); // Kullanıcı ID'sine göre siparişleri getirme
+        IEnumerable<ProductModel> GetProductsByIds(IEnumerable<int> productIds);
     }
 }

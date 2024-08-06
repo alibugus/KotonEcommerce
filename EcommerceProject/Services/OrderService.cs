@@ -1,7 +1,6 @@
 ﻿using EcommerceProject.Models;
 using EcommerceProject.Repositories.Interface;
 using EcommerceProject.Services.Interface;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,11 +10,21 @@ namespace EcommerceProject.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IProductRepository _productRepository; // Add this
 
-        public OrderService(IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository)
+        public OrderService(IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, IProductRepository productRepository) // Include IProductRepository
         {
             _orderRepository = orderRepository;
             _orderDetailRepository = orderDetailRepository;
+            _productRepository = productRepository; // Initialize IProductRepository
+        }
+
+        public IEnumerable<ProductModel> GetOrderProducts(int orderId)
+        {
+            var orderDetails = _orderDetailRepository.GetOrderDetailsByOrderId(orderId);
+            var productIds = orderDetails.Select(od => od.ProductId).ToList();
+            var products = _productRepository.GetProductsByIds(productIds);
+            return products;
         }
 
         public void PlaceOrder(OrderModel order, List<CartItemModel> cartItems)
@@ -54,7 +63,7 @@ namespace EcommerceProject.Services
         {
             return _orderRepository.GetAllOrders();
         }
-  
+
         public OrderModel GetOrderById(int orderId)
         {
             return _orderRepository.GetOrderById(orderId);
