@@ -32,6 +32,13 @@ namespace EcommerceProject.Controllers
             var user = await _userManager.GetUserAsync(User);
             var cart = _cartService.GetCart();
             var addresses = _addressService.GetAddressesByUserId(user.Id);
+
+            if (cart == null || !cart.Any())
+            {
+                ModelState.AddModelError("", "Your cart is empty.");
+                return RedirectToAction("Index", "Shop");
+            }
+
             var model = new CheckOutViewModel
             {
                 CartItems = cart,
@@ -39,7 +46,8 @@ namespace EcommerceProject.Controllers
                 LastName = user.LastName,
                 Email = user.Email,
                 City = user.City,
-                SavedAddresses = addresses
+                SavedAddresses = addresses,
+                TotalAmount = Convert.ToDecimal(ViewData["Deger"])
             };
             return View(model);
         }
@@ -66,13 +74,14 @@ namespace EcommerceProject.Controllers
                     State = model.State,
                     ZipCode = model.ZipCode,
                     User = user
-
                 };
+
                 if (string.IsNullOrEmpty(selectedAddress.Address))
                 {
                     ModelState.AddModelError("", "Address cannot be empty.");
-                    return View("Index", model);  
+                    return View("Index", model);
                 }
+
                 _addressService.AddAddress(selectedAddress);
             }
 
@@ -96,7 +105,7 @@ namespace EcommerceProject.Controllers
             var savedOrder = _orderService.GetOrdersByUserId(order.UserId)
                                           .OrderByDescending(o => o.Id)
                                           .FirstOrDefault();
-
+            decimal totalAmount = Convert.ToDecimal(TempData["TotalAmount"]);
             if (savedOrder != null)
             {
                 foreach (var cartItem in model.CartItems)
@@ -106,7 +115,7 @@ namespace EcommerceProject.Controllers
                         OrderId = savedOrder.Id,
                         ProductId = cartItem.Product.Id,
                         Quantity = cartItem.Quantity,
-                        Price = cartItem.Product.Price
+                        Price = totalAmount
                     };
                     _orderService.AddOrderDetail(orderDetail);
                 }
@@ -116,6 +125,5 @@ namespace EcommerceProject.Controllers
 
             return RedirectToAction("Index", "Order");
         }
-
     }
 }

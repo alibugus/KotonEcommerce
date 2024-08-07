@@ -85,7 +85,7 @@
                                     <input type="hidden" asp-for="@Model.CartItems[i].Product.Color" name="CartItems[@i].Product.Color" />
                                 }
                             </ul>
-                            <div class="checkout__order__total">Total <span>$@Model.CartItems.Sum(ci => ci.Product.Price * ci.Quantity)</span></div>
+                            <div class="checkout__order__total">Total <span>$@Model.TotalAmount</span></div>
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>
                     </div>

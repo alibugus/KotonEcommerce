@@ -10,6 +10,7 @@ namespace EcommerceProject.Database
             : base(options)
         {
         }
+        public DbSet<CouponModel> Coupons { get; set; }
         public DbSet<AddressModel> Addresses { get; set; }
         public DbSet<OrderModel> Orders { get; set; }
         public DbSet<OrderDetailModel> OrderDetails { get; set; }
@@ -43,6 +44,32 @@ namespace EcommerceProject.Database
                 new BrandModel { Id = 2, Name = "Brand2" }
             );
 
+            modelBuilder.Entity<CouponModel>().HasData(
+                new CouponModel
+                {
+                    Id = 1,
+                    Code = "WELCOME10",
+                    DiscountAmount = 10m,
+                    IsActive = true,
+                    ExpiryDate = DateTime.Now.AddMonths(1)
+                },
+                new CouponModel
+                {
+                    Id = 2,
+                    Code = "SUMMER20",
+                    DiscountAmount = 20m,
+                    IsActive = true,
+                    ExpiryDate = DateTime.Now.AddMonths(2)
+                },
+                new CouponModel
+                {
+                    Id = 3,
+                    Code = "FALL30",
+                    DiscountAmount = 30m,
+                    IsActive = true,
+                    ExpiryDate = DateTime.Now.AddMonths(3)
+                }
+            );
             // Seed Product
             modelBuilder.Entity<ProductModel>().HasData(
                 new ProductModel

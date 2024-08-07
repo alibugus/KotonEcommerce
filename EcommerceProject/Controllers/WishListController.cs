@@ -1,10 +1,11 @@
 ﻿using EcommerceProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceProject.Models;
-using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EcommerceProject.Controllers
 {
+    [Authorize]
     public class WishListController : Controller
     {
         private readonly IWishListService _wishListService;
@@ -25,7 +26,6 @@ namespace EcommerceProject.Controllers
         [HttpPost]
         public IActionResult AddToWishList([FromBody] AddToCartRequestModel model)
         {
-            Console.WriteLine("Received ProductId: " + model.ProductId);
             var product = _productService.GetProductById(model.ProductId);
             if (product != null)
             {
@@ -37,11 +37,31 @@ namespace EcommerceProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveProductFromWishList(int ProductId)
+        public IActionResult ToggleWishList([FromBody] AddToCartRequestModel model)
         {
-            var a = ProductId;
-            Console.WriteLine("Received ProductId: " + ProductId);
-            _wishListService.RemoveProductFromWishList(ProductId);
+            var product = _productService.GetProductById(model.ProductId);
+            if (product != null)
+            {
+                bool isInWishList = _wishListService.IsProductInWishList(model.ProductId);
+                if (isInWishList)
+                {
+                    _wishListService.RemoveProductFromWishList(model.ProductId);
+                    return Json(new { success = true, message = "Product removed from wishlist successfully!", inWishList = false });
+                }
+                else
+                {
+                    _wishListService.AddProductToWishList(product);
+                    return Json(new { success = true, message = "Product added to wishlist successfully!", inWishList = true });
+                }
+            }
+
+            return Json(new { success = false, message = "Product not found!" });
+        }
+
+        [HttpPost]
+        public IActionResult RemoveProductFromWishList(int productId)
+        {
+            _wishListService.RemoveProductFromWishList(productId);
             return Json(new { success = true, message = "Product removed from wishlist successfully!" });
         }
 
@@ -51,6 +71,5 @@ namespace EcommerceProject.Controllers
             var isInWishList = _wishListService.IsProductInWishList(productId);
             return Json(new { inWishList = isInWishList });
         }
-  
     }
 }

@@ -16,6 +16,7 @@ namespace EcommerceProject.Models
         public string Email { get; set; }
         public string OrderNotes { get; set; }
 
+        public decimal TotalAmount { get; set; }
         public List<AddressModel> SavedAddresses { get; set; }
         public int SelectedAddressId { get; set; }
 

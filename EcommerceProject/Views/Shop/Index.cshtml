@@ -152,6 +152,7 @@
                             $("#ajax-message").css('color', 'green').text("AJAX Success: Products filtered successfully.").show();
                             console.log("AJAX Success: ", result);
                             $("#product-list").html(result);
+                            applySetBg(); // Reapply the set-bg functionality
                         },
                         error: function (xhr, status, error) {
                             $("#ajax-message").css('color', 'red').text("AJAX Error: " + error).show();
@@ -159,6 +160,17 @@
                         }
                     });
                 }
+
+                // Function to reapply set-bg functionality
+                function applySetBg() {
+                    $('.set-bg').each(function () {
+                        var bg = $(this).data('setbg');
+                        $(this).css('background-image', 'url(' + bg + ')');
+                    });
+                }
+
+                // Initial application of set-bg
+                applySetBg();
             });
         </script>
     }

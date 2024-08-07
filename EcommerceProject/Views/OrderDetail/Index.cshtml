@@ -12,23 +12,86 @@
                 <p><strong>Address:</strong> @Model.Order.Address, @Model.Order.City, @Model.Order.State, @Model.Order.ZipCode</p>
                 <p><strong>Phone:</strong> @Model.Order.Phone</p>
                 <p><strong>Order Notes:</strong> @Model.Order.OrderNotes</p>
-                
             </div>
 
             <h5 class="order-details__products-title">Ordered Products</h5>
-            @foreach (var item in Model.Product)
-            {
-                <ul>
-                    <li>@item.Name</li>
-                    <li>@item.Price</li>
-                    <li>>@item.Brand</li>
-
-                </ul>
-            }
-            <ul class="order-details__products">
-            </ul>
-
-
+            <div class="order-details__products">
+                @foreach (var item in Model.Product)
+                {
+                    <div class="order-details__product">
+                        <div class="order-details__product-img">
+                            <img src="@item.ImageUrl" alt="@item.Name" />
+                        </div>
+                        <div class="order-details__product-info">
+                            <p><strong>Product Name:</strong> @item.Name</p>
+                            <p><strong>Price:</strong> $@item.Price.ToString("0.00")</p>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </section>
+
+<style>
+    .order-details {
+        padding: 50px 0;
+    }
+
+    .order-details__content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-details__title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .order-details__info p {
+        margin: 5px 0;
+    }
+
+    .order-details__products-title {
+        font-size: 20px;
+        margin: 30px 0 10px;
+        font-weight: bold;
+    }
+
+    .order-details__products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .order-details__product {
+        display: flex;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 10px;
+        width: calc(50% - 20px);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-details__product-img {
+        flex: 0 0 80px;
+        height: 80px;
+        overflow: hidden;
+        border-radius: 10px;
+        margin-right: 20px;
+    }
+
+        .order-details__product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .order-details__product-info p {
+        margin: 5px 0;
+    }
+</style>

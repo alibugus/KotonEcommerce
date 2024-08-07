@@ -12,7 +12,7 @@
                     }
                     <ul class="product__hover">
                         <li>
-                            <a href="" onclick="AddToWishList(@product.Id)">
+                            <a href="#" onclick="AddToWishList(@product.Id); return false;">
                                 <img class="wishlist-icon" src="img/icon/heart.png" alt="Add to Wishlist">
                             </a>
                         </li>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="product__item__text">
                     <h6>@product.Name</h6>
-                    <a href="" class="add-cart" onclick="AddToCart(@product.Id, 1)">+ Add To Cart</a>
+                    <a href="#" class="add-cart" onclick="AddToCart(@product.Id, 1); return false;">+ Add To Cart</a>
                     <div class="rating">
                         @for (int i = 0; i < 5; i++)
                         {
@@ -54,8 +54,32 @@
 
 <div id="feedback" style="margin-top: 20px;"></div>
 
-<!-- Ensure jQuery is loaded -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Login/Register Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 10px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="loginModalLabel">Login or Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f8f9fa;">
+                <p class="text-center mb-4">Please log in or register to proceed with your checkout.</p>
+                <div class="d-flex justify-content-around">
+                    <a href="@Url.Action("Index", "Login")" class="btn btn-dark text-white">Login</a>
+                    <a href="@Url.Action("Index", "Register")" class="btn btn-outline-dark">Register</a>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary" onclick="kapat()" id="continueAsGuestBtn">Continue as Guest </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -67,6 +91,18 @@
             });
         }, 100);
     });
+    function kapat() {
+        var myModalEl = document.getElementById('loginModal');
+        var myModal = bootstrap.Modal.getInstance(myModalEl);
+        if (myModal) {
+            myModal.hide();
+        } else {
+            var myModal = new bootstrap.Modal(myModalEl);
+            myModal.hide();
+        }
+    }
+
+
 
     function AddToCart(productId, quantity) {
         console.log("AddToCart called with productId:", productId, "quantity:", quantity);
@@ -92,14 +128,14 @@
         $.ajax({
             url: '@Url.Action("IsProductInWishList", "WishList")',
             type: 'POST',
-            dataType:'json',
+            dataType: 'json',
             data: { productId: productId },
             success: function (response) {
                 if (response.inWishList) {
-                    console.log("check "+productId)
+                    console.log("check " + productId);
                     productElement.find('.wishlist-icon').attr('src', 'img/icon/heart-filled.png');
                 } else {
-                    console.log("checkme" + productId)
+                    console.log("checkme " + productId);
                     productElement.find('.wishlist-icon').attr('src', 'img/icon/heart.png');
                 }
             },
@@ -112,8 +148,18 @@
     function AddToWishList(productId) {
         event.preventDefault(); // Prevent the default behavior of the anchor tag
         console.log("AddToWishList called with productId:", productId);
+
+        // Check if the user is authenticated
+        var isAuthenticated = '@User.Identity.IsAuthenticated';
+        if (isAuthenticated === 'False') {
+            // Show the login modal if the user is not authenticated
+            var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            myModal.show();
+            return;
+        }
+
         $.ajax({
-            url: '@Url.Action("AddToWishList", "WishList")',
+            url: '@Url.Action("ToggleWishList", "WishList")',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ ProductId: productId }),
@@ -121,7 +167,8 @@
                 if (response.success) {
                     console.log("ProductId in success response:", productId);
                     $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
-                    $('div[data-product-id="' + productId + '"] .wishlist-icon').attr('src', 'img/icon/heart-filled.png');
+                    var iconSrc = response.inWishList ? 'img/icon/heart-filled.png' : 'img/icon/heart.png';
+                    $('div[data-product-id="' + productId + '"] .wishlist-icon').attr('src', iconSrc);
                 } else {
                     console.log("ProductId in error response:", productId);
                     $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
@@ -133,4 +180,10 @@
             }
         });
     }
+
+    // Close the modal when the "Continue as Guest" button is clicked
+   
+
+    // Bootstrap modal automatically handles the close button and click outside functionality
 </script>
+

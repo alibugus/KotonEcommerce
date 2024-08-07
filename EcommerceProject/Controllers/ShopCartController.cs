@@ -2,6 +2,8 @@
 using EcommerceProject.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EcommerceProject.Controllers
 {
@@ -9,27 +11,65 @@ namespace EcommerceProject.Controllers
     {
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
+        private readonly IDiscountService _couponService;
         private readonly UserManager<AppUser> _userManager;
 
-        public ShopCartController(ICartService cartService, IProductService productService, UserManager<AppUser> userManager)
+        public ShopCartController(ICartService cartService, IProductService productService, IDiscountService couponService, UserManager<AppUser> userManager)
         {
             _cartService = cartService;
             _productService = productService;
+            _couponService = couponService;
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(CartItemViewModel cartItemViewModel)
         {
             bool isAuthenticated = User.Identity.IsAuthenticated;
-            Console.WriteLine("IsAuthenticated: " + isAuthenticated);
             var cart = _cartService.GetCart();
-            CartItemViewModel cartItemViewModel = new CartItemViewModel
+        
+
+            cartItemViewModel = new CartItemViewModel
             {
                 CartItem = cart,
-                isAuthenticated = isAuthenticated
+                isAuthenticated = isAuthenticated,
+                CouponCode = cartItemViewModel.CouponCode,
+                DiscountAmount = cartItemViewModel.DiscountAmount,
+                TotalAmount = cart.Sum(item => item.Product.Price * item.Quantity) - cartItemViewModel.DiscountAmount
             };
-            
+
             return View(cartItemViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(CouponRequestModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var isValid = await _couponService.ValidateCouponCodeAsync(model.CouponCode);
+                if (!isValid)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid coupon code.");
+                    return RedirectToAction("Index");
+                }
+
+                var discountAmount = await _couponService.GetDiscountAmountAsync(model.CouponCode);
+                var cart = _cartService.GetCart();
+                var totalAmount = cart.Sum(item => item.Product.Price * item.Quantity) - discountAmount;
+
+                var cartItemViewModel = new CartItemViewModel
+                {
+                    CartItem = cart,
+                    isAuthenticated = User.Identity.IsAuthenticated,
+                    CouponCode = model.CouponCode,
+                    DiscountAmount = discountAmount,
+                    TotalAmount = totalAmount
+                };
+
+                return RedirectToAction("Index",cartItemViewModel);
+            }
+
+            ModelState.AddModelError(string.Empty, "Error applying coupon.");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -44,24 +84,26 @@ namespace EcommerceProject.Controllers
 
             return Json(new { success = false, message = "Product not found!" });
         }
+
         [HttpPost]
         public IActionResult RemoveProductFromCart([FromBody] ProductIdRequest request)
         {
-            Console.WriteLine("Product Id: " + request.ProductId);
             _cartService.RemoveProductFromCart(request.ProductId);
             return Json(new { success = true, message = "Product removed from cart successfully!" });
         }
+
         [HttpPost]
         public IActionResult DecreaseProductQuantity([FromBody] ProductIdRequest request)
         {
-            Console.WriteLine("Product Id: " + request.ProductId);
             _cartService.DecreaseProductQuantity(request.ProductId);
-            return Json(new { success = true, message = "Product removed from cart successfully!" });
+            return Json(new { success = true, message = "Product quantity decreased successfully!" });
         }
 
-        public class ProductIdRequest
+        [HttpPost]
+        public IActionResult IncreaseProductQuantity([FromBody] ProductIdRequest request)
         {
-            public int ProductId { get; set; }
+            _cartService.IncreaseProductQuantity(request.ProductId);
+            return Json(new { success = true, message = "Product quantity increased successfully!" });
         }
 
         [HttpPost]
@@ -70,12 +112,20 @@ namespace EcommerceProject.Controllers
             _cartService.ClearCart();
             return RedirectToAction("Index");
         }
-        [HttpPost]
-        public IActionResult IncreaseProductQuantity([FromBody] ProductIdRequest request)
+
+        public class ProductIdRequest
         {
-            Console.WriteLine("Product Id: " + request.ProductId);
-            _cartService.IncreaseProductQuantity(request.ProductId);
-            return Json(new { success = true, message = "Product added to cart successfully!" });
+            public int ProductId { get; set; }
+        }
+
+        public class AddToCartRequestModel
+        {
+            public int ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+        public class CouponRequestModel
+        {
+            public string CouponCode { get; set; }
         }
     }
 }

@@ -8,8 +8,8 @@
                 <div class="breadcrumb__text">
                     <h4>Shopping Cart</h4>
                     <div class="breadcrumb__links">
-                        <a href="@Url.Action("Index","Home")">Home</a>
-                        <a href="@Url.Action("Index","Shop")">Shop</a>
+                        <a href="@Url.Action("Index", "Home")">Home</a>
+                        <a href="@Url.Action("Index", "Shop")">Shop</a>
                         <span>Shopping Cart</span>
                     </div>
                 </div>
@@ -48,9 +48,9 @@
                                     </td>
                                     <td class="quantity__item">
                                         <div class="quantity-container">
-                                            <div >
+                                            <div>
                                                 <button class="quantity-btn" onclick="DecreaseProductQuantity(@item.Product.Id)">-</button>
-                                                <input type="text" value="@item.Quantity">
+                                                <input type="text" id="quantity-@item.Product.Id" value="@item.Quantity">
                                                 <button class="quantity-btn" onclick="IncreaseProductQuantity(@item.Product.Id)">+</button>
                                             </div>
                                         </div>
@@ -82,29 +82,44 @@
             <div class="col-lg-4">
                 <div class="cart__discount">
                     <h6>Discount codes</h6>
-                    <form action="#">
-                        <input type="text" placeholder="Coupon code">
+                    <form asp-action="ApplyCoupon" asp-controller="ShopCart" method="post" id="apply-coupon-form">
+                        <input asp-for="@Model.CouponCode" type="text" id="coupon-code" name="CouponCode" placeholder="Coupon code" value="@Model.CouponCode">
                         <button type="submit">Apply</button>
                     </form>
+                    @if (Model.DiscountAmount > 0)
+                    {
+                        <div>
+                            <p>Coupon applied: @Model.CouponCode</p>
+                            <p>Discount: -@Model.DiscountAmount.ToString("C")</p>
+                        </div>
+                    }
                 </div>
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
                         <li>Subtotal <span>@(Model.CartItem.Sum(item => item.Product.Price * item.Quantity).ToString("C"))</span></li>
-                        <li>Total <span>@(Model.CartItem.Sum(item => item.Product.Price * item.Quantity).ToString("C"))</span></li>
+                        @if (Model.DiscountAmount > 0)
+                        {
+                            <li>Discount <span> - @Model.DiscountAmount.ToString("C")</span></li>
+                            <li>Total <span>@Model.TotalAmount.ToString("C")</span></li>
+                        }
+                        else
+                        {
+                            <li>Total <span>@(Model.CartItem.Sum(item => item.Product.Price * item.Quantity).ToString("C"))</span></li>
+                        }
                     </ul>
-                    <div >
+                    <div>
+
                         <div class="continue__btn update__btn">
-                            <a href="javascript:proceedToCheckout('@Model.isAuthenticated.ToString().ToLower()')" class="primary-btn fa fa-spinner">Proceed to checkout</a>
+                            <a href="javascript:proceedToCheckout('@Model.isAuthenticated.ToString().ToLower()', '@ViewData["Deger"] = @Model.TotalAmount.ToString("C")')" class="primary-btn fa fa-spinner">Proceed to checkout</a>
                         </div>
+
                     </div>
-                   
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- Shopping Cart Section End -->
 <!-- Ensure jQuery is loaded -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -119,7 +134,6 @@
             success: function (response) {
                 if (response.success) {
                     location.reload();
-                    console.log(productId);
                 } else {
                     $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
                 }
@@ -129,9 +143,10 @@
             }
         });
     }
+
     function proceedToCheckout(isAuthenticated) {
-        if (isAuthenticated=="true") {
-            console.log("sa"+isAuthenticated);
+        if (isAuthenticated == "true") {
+            console.log("sa" + isAuthenticated);
             window.location.href = '@Url.Action("Index", "Checkout")';
         } else {
             console.log(isAuthenticated);
@@ -139,9 +154,11 @@
         }
     }
 
+
     function continueAsGuest() {
         window.location.href = '@Url.Action("Index", "GuestCheckout")';
     }
+
     function IncreaseProductQuantity(productId) {
         $.ajax({
             url: '@Url.Action("IncreaseProductQuantity", "ShopCart")',
@@ -161,6 +178,7 @@
             }
         });
     }
+
     function DecreaseProductQuantity(productId) {
         $.ajax({
             url: '@Url.Action("DecreaseProductQuantity", "ShopCart")',
@@ -186,8 +204,6 @@
     .cart-close-btn {
         padding: 2px 5px; /* Further reduced padding */
         font-size: 0.8rem; /* Further reduced font size */
-       
-
     }
 
         .cart-close-btn:hover {
@@ -224,61 +240,4 @@
             background-color: grey; /* Darker color on hover */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
         }
-
-</style>
-<!-- Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0" style="border-radius: 10px;">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="loginModalLabel">Login or Register</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="background-color: #f8f9fa;">
-                <p class="text-center mb-4">Please log in or register to proceed with your checkout.</p>
-                <div class="d-flex justify-content-around">
-                    <a href="@Url.Action("Index", "Login")" class="btn btn-dark text-white">Login</a>
-                    <a href="@Url.Action("Index", "Register")" class="btn btn-outline-dark">Register</a>
-                </div>
-                <div class="text-center mt-3">
-                    <button type="button" class="btn btn-outline-secondary" onclick="continueAsGuest()">Continue as Guest</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Styles -->
-<style>
-    .modal-content {
-        background-color: #ffffff;
-    }
-
-    .modal-header {
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .btn-dark {
-        background-color: #343a40;
-        border-color: #343a40;
-    }
-
-    .btn-outline-dark {
-        color: #343a40;
-        border-color: #343a40;
-    }
-
-        .btn-outline-dark:hover {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-    .modal-body p {
-        color: #343a40;
-    }
-
-    .btn-close {
-        background-color: transparent;
-        border: none;
-    }
 </style>
