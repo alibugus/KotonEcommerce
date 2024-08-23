@@ -1,10 +1,6 @@
 ﻿using EcommerceProject.Database;
 using EcommerceProject.Models;
-using EcommerceProject.Repositories.Interface;
-using Microsoft.EntityFrameworkCore;
 
-namespace EcommerceProject.Repositories
-{
     public class CouponRepository : ICouponRepository
     {
         private readonly ApplicationDbContext _context;
