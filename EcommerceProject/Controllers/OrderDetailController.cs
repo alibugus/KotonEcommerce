@@ -21,6 +21,7 @@ namespace EcommerceProject.Controllers
         [Route("OrderDetail/Post")]
         public IActionResult Index(int OrderId)
         {
+           
             var order = _orderService.GetOrderById(OrderId);
             if (order == null)
             {
@@ -38,7 +39,8 @@ namespace EcommerceProject.Controllers
             var orderdetailviewmodel = new OrderDetailViewModel
             {
                 Order = order,
-                Product = products
+                Product = products,
+                OrderDetails = order.OrderDetails
             };
             if (order == null)
             {

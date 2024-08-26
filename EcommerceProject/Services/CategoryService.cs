@@ -19,5 +19,8 @@ namespace EcommerceProject.Services
             // Assuming GetAllCategories from repository is non-null
             return _categoryRepository.GetAllCategories() ?? new List<CategoryModel>();
         }
+        public CategoryModel GetCategory(int id) {
+            return _categoryRepository.GetCategoryById(id);
+        }
     }
 }

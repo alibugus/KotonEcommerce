@@ -1,0 +1,233 @@
+﻿@model ProductDetailsViewModel
+<!-- Shop Details Section Begin -->
+<section class="shop-details">
+    <div class="product__details__pic">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__breadcrumb">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Product Details</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Image Thumbnail Navigation -->
+                <div class="col-lg-3 col-md-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        @if (Model.Images != null && Model.Images.Any())
+                        {
+                            @foreach (var image in Model.Images)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(image == Model.Images.First() ? "active" : "")" data-toggle="tab" href="#tabs-@image.Id" role="tab">
+                                        <div class="product__thumb__pic set-bg" data-setbg="@image.ImageUrl"></div>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <!-- Main Product Image -->
+                <div class="col-lg-6 col-md-9">
+                    <div class="tab-content">
+                        @if (Model.Images != null && Model.Images.Any())
+                        {
+                            @foreach (var image in Model.Images)
+                            {
+                                <div class="tab-pane @(image == Model.Images.First() ? "active" : "")" id="tabs-@image.Id" role="tabpanel">
+                                    <div class="product__details__pic__item">
+                                        <img src="@image.ImageUrl" alt="Product Image">
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product__details__content">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>@Model.Product.Name</h4>
+
+                        <h3>@Model.Product.Price.ToString("C2")</h3>
+                        <p>@Model.Product.Description</p>
+
+                        <div class="product__details__option__size">
+                            <span>Size:</span>
+                            @foreach (var size in Model.Product.ProductSizes)
+                            {
+                                <label for="@size.Size">
+                                    @size.Size (Available: @size.StockQuantity)
+                                    <input type="radio" id="@size.Size" name="productSize" value="@size.Size" />
+                                </label>
+                            }
+                        </div>
+
+                        <!-- Quantity and Add to Cart -->
+                        <div class="product__details__cart__option">
+                            <button onclick="AddToCart(@Model.Product.Id)" class="primary-btn">Add to Cart</button>
+                        </div>
+
+                        <!-- Wishlist and Compare -->
+                        <div class="product__details__btns__option">
+                            <a href="" onclick="AddToWishList(@Model.Product.Id)"><i class="fa fa-heart"></i> Add to Wishlist</a>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="product__details__last__option">
+                            <ul>
+                                <li><span>Categories:</span> @Model.Product.Category.Name</li>
+                                <li><span>Brand:</span> @Model.Product.Brand.Name</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Information Section -->
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="product__details__text">
+                        <h4>Model Information</h4>
+                        <ul>
+                            <li><span>Height:</span> @Model.ModelInformation.Height cm</li>
+                            <li><span>Jeans Size:</span> @Model.ModelInformation.JeansSize</li>
+                            <li><span>Shirt Size:</span> @Model.ModelInformation.ShirtSize</li>
+                            <li><span>Chest Size:</span> @Model.ModelInformation.ChestSize cm</li>
+                            <li><span>Hip Size:</span> @Model.ModelInformation.HipSize cm</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details Tabs -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Description</a>
+                            </li>
+                           
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
+                                <div class="product__details__tab__content">
+                                   
+                                    <div class="product__details__tab__content__item">
+                                        <h5>Product Information</h5>
+                                        <p>@Model.Product.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Details Section End -->
+<div id="feedback" style="margin-top: 20px;"></div>
+
+<!-- Login/Register Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 10px;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="loginModalLabel">Login or Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f8f9fa;">
+                <p class="text-center mb-4">Please log in or register to proceed with your checkout.</p>
+                <div class="d-flex justify-content-around">
+                    <a href="@Url.Action("Index", "Login")" class="btn btn-dark text-white">Login</a>
+                    <a href="@Url.Action("Index", "Register")" class="btn btn-outline-dark">Register</a>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary" onclick="kapat()" id="continueAsGuestBtn">Continue as Guest </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+
+
+
+    function AddToCart(productId) {
+        console.log("AddToCart called with productId:", productId);
+
+        var selectedSize = $("input[name='productSize']:checked").val();
+        if (!selectedSize) {
+            $('#feedback').html('<div class="alert alert-danger">Please select a size before adding to cart.</div>');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("AddToCart", "ShopCart")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ ProductId: productId, Quantity: 1, SelectedSize: selectedSize }),
+            success: function (response) {
+                if (response.success) {
+                    $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                    window.location.reload();
+                } else {
+                    $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
+            }
+        });
+    }
+
+    function AddToWishList(productId) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+        console.log("AddToWishList called with productId:", productId);
+
+        // Check if the user is authenticated
+        var isAuthenticated = '@User.Identity.IsAuthenticated';
+        if (isAuthenticated === 'False') {
+            // Show the login modal if the user is not authenticated
+            var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            myModal.show();
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("ToggleWishList", "WishList")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ ProductId: productId }),
+            success: function (response) {
+                if (response.success) {
+                    console.log("ProductId in success response:", productId);
+                    $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                    
+                } else {
+                    console.log("ProductId in error response:", productId);
+                    $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("ProductId in error handler:", productId);
+                $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
+            }
+        });
+    }
+    
+
+
+</script>

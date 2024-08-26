@@ -219,12 +219,17 @@ namespace EcommerceProject.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Category1"
+                            Name = "T-Shirts"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Category2"
+                            Name = "Jeans"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Jackets"
                         });
                 });
 
@@ -259,7 +264,7 @@ namespace EcommerceProject.Migrations
                             Id = 1,
                             Code = "WELCOME10",
                             DiscountAmount = 10m,
-                            ExpiryDate = new DateTime(2024, 9, 7, 13, 23, 31, 233, DateTimeKind.Local).AddTicks(3529),
+                            ExpiryDate = new DateTime(2024, 9, 26, 15, 9, 54, 38, DateTimeKind.Local).AddTicks(7666),
                             IsActive = true
                         },
                         new
@@ -267,7 +272,7 @@ namespace EcommerceProject.Migrations
                             Id = 2,
                             Code = "SUMMER20",
                             DiscountAmount = 20m,
-                            ExpiryDate = new DateTime(2024, 10, 7, 13, 23, 31, 233, DateTimeKind.Local).AddTicks(3549),
+                            ExpiryDate = new DateTime(2024, 10, 26, 15, 9, 54, 38, DateTimeKind.Local).AddTicks(7690),
                             IsActive = true
                         },
                         new
@@ -275,8 +280,183 @@ namespace EcommerceProject.Migrations
                             Id = 3,
                             Code = "FALL30",
                             DiscountAmount = 30m,
-                            ExpiryDate = new DateTime(2024, 11, 7, 13, 23, 31, 233, DateTimeKind.Local).AddTicks(3551),
+                            ExpiryDate = new DateTime(2024, 11, 26, 15, 9, 54, 38, DateTimeKind.Local).AddTicks(7692),
                             IsActive = true
+                        });
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestCouponModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AppliedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CouponId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GuestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
+
+                    b.ToTable("GuestCoupons");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestOrderDetailModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("GuestOrderDetails");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestOrderModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNotes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GuestOrders");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.ModelInformationModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChestSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Height")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HipSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JeansSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShirtSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModelInformationModels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ChestSize = "100",
+                            Height = "180",
+                            HipSize = "95",
+                            JeansSize = "32",
+                            ShirtSize = "M"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ChestSize = "95",
+                            Height = "175",
+                            HipSize = "90",
+                            JeansSize = "30",
+                            ShirtSize = "S"
                         });
                 });
 
@@ -299,6 +479,10 @@ namespace EcommerceProject.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("SelectedSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -354,6 +538,9 @@ namespace EcommerceProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -366,7 +553,7 @@ namespace EcommerceProject.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("EcommerceProject.Models.ProductModel", b =>
+            modelBuilder.Entity("EcommerceProject.Models.ProductImageModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -374,30 +561,56 @@ namespace EcommerceProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageUrl = "img/shop-details/product-big.png",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageUrl = "img/shop-details/product-big-2.png",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ImageUrl = "img/shop-details/product-big-3.png",
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageUrl = "img/shop-details/product-big-4.png",
+                            ProductId = 2
+                        });
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.ProductSizeModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Size")
                         .IsRequired()
@@ -408,38 +621,136 @@ namespace EcommerceProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Products");
+                    b.ToTable("ProductSizes");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            BrandId = 1,
-                            CategoryId = 1,
-                            Color = "Red",
-                            Description = "Description1",
-                            ImageUrl = "image1.jpg",
-                            Name = "Product1",
-                            Price = 10.0m,
+                            ProductId = 1,
                             Size = "M",
-                            StockQuantity = 100
+                            StockQuantity = 20
                         },
                         new
                         {
                             Id = 2,
-                            BrandId = 2,
-                            CategoryId = 2,
-                            Color = "Blue",
-                            Description = "Description2",
-                            ImageUrl = "image2.jpg",
-                            Name = "Product2",
-                            Price = 20.0m,
+                            ProductId = 1,
                             Size = "L",
-                            StockQuantity = 200
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProductId = 1,
+                            Size = "XL",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProductId = 2,
+                            Size = "30",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ProductId = 2,
+                            Size = "32",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ProductId = 2,
+                            Size = "34",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ProductId = 3,
+                            Size = "M",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ProductId = 3,
+                            Size = "L",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ProductId = 3,
+                            Size = "XL",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ProductId = 1,
+                            Size = "M",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ProductId = 1,
+                            Size = "L",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ProductId = 1,
+                            Size = "XL",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ProductId = 2,
+                            Size = "30",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ProductId = 2,
+                            Size = "32",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ProductId = 2,
+                            Size = "34",
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ProductId = 3,
+                            Size = "M",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ProductId = 3,
+                            Size = "L",
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ProductId = 3,
+                            Size = "XL",
+                            StockQuantity = 10
                         });
                 });
 
@@ -546,6 +857,237 @@ namespace EcommerceProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModelInformationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 1,
+                            CategoryId = 1,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish T-Shirt.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Casual T-Shirt",
+                            Price = 19.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BrandId = 2,
+                            CategoryId = 1,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish T-Shirt.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Sport T-Shirt",
+                            Price = 19.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 2,
+                            CategoryId = 2,
+                            Color = "Blue,Black",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Durable and stylish jeans for everyday wear.",
+                            ImageUrl = "jeans1.jpg",
+                            ModelInformationId = 2,
+                            Name = "Classic Jeans",
+                            Price = 49.99m,
+                            Rating = 5.0,
+                            ReviewCount = 20,
+                            Size = "30,32,34",
+                            StockQuantity = 30
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BrandId = 1,
+                            CategoryId = 1,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish T-Shirt.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Casual T-Shirt",
+                            Price = 29.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BrandId = 1,
+                            CategoryId = 3,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish Jacket.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Casual Jacket",
+                            Price = 99.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BrandId = 1,
+                            CategoryId = 3,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish Jacket.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Sport Jacket",
+                            Price = 29.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BrandId = 1,
+                            CategoryId = 3,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish Jacket.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Classic Jacket",
+                            Price = 129.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BrandId = 1,
+                            CategoryId = 3,
+                            Color = "Red,Blue,Green",
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "A comfortable and stylish Jacket.",
+                            ImageUrl = "tshirt1.jpg",
+                            ModelInformationId = 1,
+                            Name = "Kürk Ceket",
+                            Price = 169.99m,
+                            Rating = 4.0,
+                            ReviewCount = 10,
+                            Size = "M,L,XL",
+                            StockQuantity = 50
+                        });
+                });
+
+            modelBuilder.Entity("UserCouponModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CouponId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UsedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserCoupons");
+                });
+
             modelBuilder.Entity("EcommerceProject.Models.AddressModel", b =>
                 {
                     b.HasOne("EcommerceProject.Models.AppUser", "User")
@@ -555,6 +1097,28 @@ namespace EcommerceProject.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestCouponModel", b =>
+                {
+                    b.HasOne("EcommerceProject.Models.CouponModel", "Coupon")
+                        .WithMany()
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coupon");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestOrderDetailModel", b =>
+                {
+                    b.HasOne("EcommerceProject.Models.GuestOrderModel", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("EcommerceProject.Models.OrderDetailModel", b =>
@@ -568,23 +1132,26 @@ namespace EcommerceProject.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("EcommerceProject.Models.ProductModel", b =>
+            modelBuilder.Entity("EcommerceProject.Models.ProductImageModel", b =>
                 {
-                    b.HasOne("EcommerceProject.Models.BrandModel", "Brand")
-                        .WithMany("Products")
-                        .HasForeignKey("BrandId")
+                    b.HasOne("ProductModel", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EcommerceProject.Models.CategoryModel", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.ProductSizeModel", b =>
+                {
+                    b.HasOne("ProductModel", "Product")
+                        .WithMany("ProductSizes")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Brand");
-
-                    b.Navigation("Category");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -638,6 +1205,49 @@ namespace EcommerceProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductModel", b =>
+                {
+                    b.HasOne("EcommerceProject.Models.BrandModel", "Brand")
+                        .WithMany("Products")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceProject.Models.CategoryModel", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("UserCouponModel", b =>
+                {
+                    b.HasOne("EcommerceProject.Models.CouponModel", "Coupon")
+                        .WithMany("UserCoupons")
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceProject.Models.AppUser", "User")
+                        .WithMany("UserCoupons")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Coupon");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.AppUser", b =>
+                {
+                    b.Navigation("UserCoupons");
+                });
+
             modelBuilder.Entity("EcommerceProject.Models.BrandModel", b =>
                 {
                     b.Navigation("Products");
@@ -648,9 +1258,26 @@ namespace EcommerceProject.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("EcommerceProject.Models.CouponModel", b =>
+                {
+                    b.Navigation("UserCoupons");
+                });
+
+            modelBuilder.Entity("EcommerceProject.Models.GuestOrderModel", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
             modelBuilder.Entity("EcommerceProject.Models.OrderModel", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("ProductModel", b =>
+                {
+                    b.Navigation("ProductImages");
+
+                    b.Navigation("ProductSizes");
                 });
 #pragma warning restore 612, 618
         }

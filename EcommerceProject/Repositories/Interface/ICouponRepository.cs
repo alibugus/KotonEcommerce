@@ -1,10 +1,10 @@
 ﻿using EcommerceProject.Models;
+using System.Threading.Tasks;
 
-namespace EcommerceProject.Repositories.Interface
+public interface ICouponRepository
 {
-    public interface ICouponRepository
-    {
-        Task<CouponModel> GetCouponByCodeAsync(string couponCode);
-        Task<bool> IsCouponValidAsync(string couponCode);
-    }
+    Task<CouponModel> GetCouponByCodeAsync(string code);
+    Task<bool> IsCouponValidAsync(string code);
+    Task<decimal> GetDiscountAmountAsync(string code);
+    Task<IEnumerable<UserCouponModel>> GetUserActiveCouponsAsync(int guestId);
 }

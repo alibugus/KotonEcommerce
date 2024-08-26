@@ -2,6 +2,7 @@
 using EcommerceProject.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,32 +14,39 @@ namespace EcommerceProject.Controllers
         private readonly IOrderService _orderService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IAddressService _addressService;
+        private readonly IDiscountService _discountService;
 
-        public CheckoutController(ICartService cartService, IOrderService orderService, UserManager<AppUser> userManager, IAddressService addressService)
+        public CheckoutController(ICartService cartService, IOrderService orderService, UserManager<AppUser> userManager, IAddressService addressService, IDiscountService discountService)
         {
             _cartService = cartService;
             _orderService = orderService;
             _userManager = userManager;
             _addressService = addressService;
+            _discountService = discountService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(CheckOutViewModel checkOutViewModel)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "GuestCheckout");
             }
 
             var user = await _userManager.GetUserAsync(User);
-            var cart = _cartService.GetCart();
-            var addresses = _addressService.GetAddressesByUserId(user.Id);
-
-            if (cart == null || !cart.Any())
+            if (user == null)
             {
-                ModelState.AddModelError("", "Your cart is empty.");
-                return RedirectToAction("Index", "Shop");
+                return RedirectToAction("Index", "GuestCheckout");
             }
 
+            var cart = _cartService.GetCart();
+            var addresses = _addressService.GetAddressesByUserId(user.Id);
+            var activeCoupons = (await _discountService.GetUserActiveCouponsAsync(user.Id)).ToList();
+            var firstActiveCoupon = activeCoupons.FirstOrDefault();
+            decimal discountamount = 0;
+            if (firstActiveCoupon != null)
+            {
+                discountamount = firstActiveCoupon.Coupon.DiscountAmount;
+            }
             var model = new CheckOutViewModel
             {
                 CartItems = cart,
@@ -47,16 +55,49 @@ namespace EcommerceProject.Controllers
                 Email = user.Email,
                 City = user.City,
                 SavedAddresses = addresses,
-                TotalAmount = Convert.ToDecimal(ViewData["Deger"])
+                CouponCode = checkOutViewModel.CouponCode,
+                TotalAmount = cart.Sum(item => item.Product.Price * item.Quantity) - discountamount
             };
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartItemViewModel(CartItemViewModel cartItemViewModel)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            var cart = _cartService.GetCart();
+
+            var model = new CartItemViewModel
+            {
+                CartItem = cart,
+                isAuthenticated = isAuthenticated,
+                TotalAmount = cartItemViewModel.TotalAmount,
+                CouponCode = cartItemViewModel.CouponCode,
+                DiscountAmount = cartItemViewModel.DiscountAmount,
+            };
+           
+
+            return RedirectToAction("Index", "Checkout", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> PlaceOrder(CheckOutViewModel model)
         {
-            model.CartItems = _cartService.GetCart();
+            var cart = _cartService.GetCart();
+            model.CartItems = cart;
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "GuestCheckout");
+            }
+            var activeCoupons = (await _discountService.GetUserActiveCouponsAsync(user.Id)).ToList();
+            var firstActiveCoupon = activeCoupons.FirstOrDefault();
+            decimal  discountamount = 0;
+            if (firstActiveCoupon != null)
+            {
+                discountamount = firstActiveCoupon.Coupon.DiscountAmount;
+            }
             AddressModel selectedAddress;
 
             if (model.SelectedAddressId != 0)
@@ -84,7 +125,7 @@ namespace EcommerceProject.Controllers
 
                 _addressService.AddAddress(selectedAddress);
             }
-
+            
             var order = new OrderModel
             {
                 FirstName = user.FirstName,
@@ -97,31 +138,17 @@ namespace EcommerceProject.Controllers
                 Phone = user.PhoneNumber,
                 Email = user.Email,
                 OrderNotes = model.OrderNotes,
-                UserId = user.Id
+                UserId = user.Id,
+
+                TotalPrice = cart.Sum(item => item.Product.Price * item.Quantity) - discountamount
             };
 
             _orderService.PlaceOrder(order, model.CartItems);
 
-            var savedOrder = _orderService.GetOrdersByUserId(order.UserId)
-                                          .OrderByDescending(o => o.Id)
-                                          .FirstOrDefault();
-            decimal totalAmount = Convert.ToDecimal(TempData["TotalAmount"]);
-            if (savedOrder != null)
-            {
-                foreach (var cartItem in model.CartItems)
-                {
-                    var orderDetail = new OrderDetailModel
-                    {
-                        OrderId = savedOrder.Id,
-                        ProductId = cartItem.Product.Id,
-                        Quantity = cartItem.Quantity,
-                        Price = totalAmount
-                    };
-                    _orderService.AddOrderDetail(orderDetail);
-                }
-
-                _cartService.ClearCart();
-            }
+             
+                 await _discountService.MarkCouponAsUsedAsync(user.Id, model.CouponCode);
+       
+            
 
             return RedirectToAction("Index", "Order");
         }

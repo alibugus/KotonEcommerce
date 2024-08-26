@@ -2,6 +2,7 @@
 using EcommerceProject.Models;
 using EcommerceProject.Repositories.Interface;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceProject.Repositories
 {
@@ -14,14 +15,21 @@ namespace EcommerceProject.Repositories
 			_context = context;
 		}
 
-		public IEnumerable<ProductModel> GetAllProducts()
-		{
-			return _context.Products.ToList();
-			
-		}
-		public ProductModel GetProductById(int id) {
-
-           return _context.Products.FirstOrDefault(p => p.Id == id);
+        public IEnumerable<ProductModel> GetAllProducts()
+        {
+            return _context.Products
+                           .Include(p => p.ProductSizes)  // Include ProductSizes
+                           .Include(p => p.Category)
+                           .Include(p => p.Brand)
+                           .ToList();
+        }
+        public ProductModel GetProductById(int id)
+        {
+            return _context.Products
+                           .Include(p => p.ProductSizes)
+                           .Include(p => p.Category)
+                           .Include(p => p.Brand)
+                           .FirstOrDefault(p => p.Id == id);
         }
         public IEnumerable<ProductModel> GetProductsByIds(IEnumerable<int> productIds)
         {             return _context.Products.Where(p => productIds.Contains(p.Id)).ToList();
@@ -31,7 +39,31 @@ namespace EcommerceProject.Repositories
             return _context.Products.Where(p =>
                 (categoryIds == null || categoryIds.Count == 0 || categoryIds.Contains(p.CategoryId)) &&
                 (brandIds == null || brandIds.Count == 0 || brandIds.Contains(p.BrandId))
-            ).ToList();
+            ).Include(p => p.ProductSizes) // ProductSizes'i dahil ediyoruz
+        .ToList();
+        }
+        
+        Task IProductRepository.UpdateProduct(ProductModel product)
+        {
+            return Task.Run(() =>
+            {
+                _context.Products.Update(product);
+                _context.SaveChanges();
+            });
+        }
+
+        public IEnumerable<ProductImageModel> GetImagesByProductId(int productId)
+        {
+            return _context.ProductImages
+                           .Where(pi => pi.ProductId == productId)
+                           .ToList();
+        }
+
+        public int GetTotalStockQuantity(int productId)
+        {
+            return _context.ProductSizes
+                           .Where(ps => ps.ProductId == productId)
+                           .Sum(ps => ps.StockQuantity);
         }
     }
 }

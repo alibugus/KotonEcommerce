@@ -22,6 +22,12 @@ namespace EcommerceProject.Repositories
                 .Include(c => c.Products) // Ensure Products are included
                 .ToList() ?? new List<CategoryModel>(); // Ensure a non-null result
         }
+        public CategoryModel GetCategoryById(int id)
+        {
+            return _context.Categories
+                .Include(c => c.Products) // Ensure Products are included
+                .FirstOrDefault(c => c.Id == id);
+        }
     }
 
 }

@@ -18,5 +18,9 @@ namespace EcommerceProject.Services.Interface
         {
             return _brandRepository.GetAllBrands();
         }
+        public BrandModel GetBrandById(int id)
+        {
+            return _brandRepository.GetBrandById(id);
+        }
     }
 }

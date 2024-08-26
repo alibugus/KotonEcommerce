@@ -13,10 +13,10 @@ namespace EcommerceProject.Services
         {
             _productRepository = productRepository;
         }
-
+        
       public IEnumerable<ProductModel> GetAllProducts()
       {
-           return _productRepository.GetAllProducts();
+           return  _productRepository.GetAllProducts();
       }
 
         public ProductModel GetProductById(int id)
@@ -29,5 +29,9 @@ namespace EcommerceProject.Services
         }
 
 
+        IEnumerable<ProductImageModel> IProductService.GetImagesByProductId(int productId)
+        {
+            return _productRepository.GetImagesByProductId(productId);
+        }
     }
 }

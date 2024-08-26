@@ -17,6 +17,8 @@ namespace EcommerceProject.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string OrderNotes { get; set; }
+
+        public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public List<OrderDetailModel> OrderDetails { get; set; }
     }

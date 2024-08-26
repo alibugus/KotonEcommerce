@@ -61,15 +61,16 @@ public class CartService : ICartService
             SaveCart(cart);
         }
     }
-    public void AddProductToCart(ProductModel product, int quantity)
+    public void AddProductToCart(ProductModel product, int quantity, string selectedSize)
     {
-        //Mevcut sepeti al
+        product.Size = selectedSize;
         var cart = GetCart();
         var cartItem = cart.Find(item => item.Product.Id == product.Id);
         //Eğer ürün sepette varsa, miktarını arttır
         if (cartItem != null)
         {
             cartItem.Quantity += quantity;
+            cartItem.SelectedSize = selectedSize;
         }
         //Eğer ürün sepette yoksa, yeni bir ürün olarak ekle
         else
@@ -77,7 +78,9 @@ public class CartService : ICartService
             cart.Add(new CartItemModel
             {
                 Product = product,
-                Quantity = quantity
+                Quantity = quantity,
+                SelectedSize = selectedSize
+
             });
         }
 
@@ -99,7 +102,12 @@ public class CartService : ICartService
     private void SaveCart(List<CartItemModel> cart)
     {
         //Sepeti JSON formatına çevir
-        var cartJson = JsonConvert.SerializeObject(cart);
+        var jsonSettings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        };
+        var cartJson = JsonConvert.SerializeObject(cart, jsonSettings);
         //Cookie'ye sepeti kaydet
         var cookieOptions = new CookieOptions
         {

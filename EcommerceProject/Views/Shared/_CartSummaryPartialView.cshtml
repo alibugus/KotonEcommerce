@@ -1,0 +1,23 @@
+﻿@model CartItemViewModel
+
+<div class="dropdown-menu" aria-labelledby="cartMenu" id="cartDropdownMenu">
+    @if (Model.CartItem != null && Model.CartItem.Any())
+    {
+        <ul class="list-unstyled">
+            @foreach (var item in Model.CartItem)
+            {
+                <li class="d-flex align-items-center">
+                    <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width: 50px; height: 50px;" />
+                    <div class="ml-2">
+                        <p>@item.Product.Name</p>
+                        <p>@item.Quantity x $@item.Product.Price</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Sepetiniz boş.</p>
+    }
+</div>

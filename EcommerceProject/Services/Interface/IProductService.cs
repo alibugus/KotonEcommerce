@@ -8,5 +8,6 @@ namespace EcommerceProject.Services.Interface
         IEnumerable<ProductModel> GetAllProducts();
         IEnumerable<ProductModel> GetFilteredProducts(List<int> categoryIds, List<int> brandIds);
         ProductModel GetProductById(int productId);
+        IEnumerable<ProductImageModel> GetImagesByProductId(int productId);
     }
 }

@@ -85,6 +85,9 @@
                                     <input type="hidden" asp-for="@Model.CartItems[i].Product.Color" name="CartItems[@i].Product.Color" />
                                 }
                             </ul>
+                            
+                            <input type="hidden" asp-for="CouponCode" name="CouponCode" />
+                            <input type="hidden" asp-for="TotalAmount" name="TotalAmount" />
                             <div class="checkout__order__total">Total <span>$@Model.TotalAmount</span></div>
                             <button type="submit" class="site-btn">PLACE ORDER</button>
                         </div>

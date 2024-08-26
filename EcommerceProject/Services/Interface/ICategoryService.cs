@@ -6,5 +6,6 @@ namespace EcommerceProject.Services.Interface
     public interface ICategoryService
     {
         IEnumerable<CategoryModel> GetAllCategories();
+        CategoryModel GetCategory(int id);
     }
 }

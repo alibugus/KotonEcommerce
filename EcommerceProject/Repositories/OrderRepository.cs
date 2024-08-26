@@ -42,5 +42,21 @@ namespace EcommerceProject.Repositories
                                   .Where(o => o.UserId == userId)
                                   .ToList();
         }
+        public IEnumerable<GuestOrderModel> GetGuestOrdersByGuestId(string guestId)
+        {
+            return _context.GuestOrders.Include(o => o.OrderDetails)
+                                  .Where(o => o.GuestId == guestId)
+                                  .ToList();
+        }
+
+        public void AddGuestOrder(GuestOrderModel order)
+        {
+            _context.GuestOrders.Add(order);
+            _context.SaveChanges();
+        }
+       public  IEnumerable<GuestOrderModel> GetAllGuestOrders()
+        {
+            return _context.GuestOrders.Include(o => o.OrderDetails).ToList();
+        }
     }
 }

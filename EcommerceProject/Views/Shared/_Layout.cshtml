@@ -51,10 +51,13 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-            <a href=@Url.Action("Index","WishList")><img src="img/icon/heart.png" alt=""></a>
-            <a href=@Url.Action("Index","ShopCart")><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
+            <a href="@Url.Action("Index", "WishList")"><img src="img/icon/heart.png" alt=""></a>
+            <a href="@Url.Action("Index", "ShopCart")">
+                <img src="img/icon/cart.png" alt="">
+                <span>0</span>  <!-- This id should match the JavaScript -->
+            </a>
         </div>
+
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__text">
             <p>Free shipping, 30-day return or refund guarantee.</p>
@@ -122,27 +125,27 @@
                             </li>
                         </ul>
                         <ul class="right-menu">
-                            <li class="active"><a href=@Url.Action("Index","Home")>Home</a></li>
+                            <li ><a href=@Url.Action("Index","Home")>Home</a></li>
                             <li><a href=@Url.Action("Index","Shop")>Shop</a></li>
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
+                                    <li><a href=@Url.Action("Index","ShopCart")">Shopping Cart</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
                             <li><a href="./contact.html">Contacts</a></li>
                         </ul>
                     </nav>
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt="" style="width: 24px; height: 24px;"></a>
-                        <a href=@Url.Action("Index","WishList")><img src="img/icon/heart.png" alt="" style="width: 24px; height: 24px;"></a>
-                        <a href=@Url.Action("Index","ShopCart")><img src="img/icon/cart.png" alt="" style="width: 24px; height: 24px;"> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                       
+                        <a href="@Url.Action("Index", "WishList")">
+                            <img src="img/icon/heart.png" alt="" style="width: 24px; height: 24px;">
+                        </a>
+                        <a href="@Url.Action("Index", "ShopCart")">
+                            <img src="img/icon/cart.png" alt="" style="width: 24px; height: 24px;">
+                            <span id="cart-item-count">0</span>
+                        </a>
+                        
                         <div class="dropdown user-icon">
                             <a href="#" class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="https://img.icons8.com/material-outlined/24/000000/user.png" alt="User Icon">
@@ -282,3 +285,25 @@
 </body>
 
 </html>
+<script>
+    function updateCartItemCount() {
+        $.ajax({
+            url: '/ShopCart/GetCartItemCount',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                console.log("Full response:", response);  // Check response structure
+                $('#cart-item-count').text(response.cartItemCount);  // Use the correct property name
+                
+            },
+            error: function (error) {
+                console.error("Cart item count could not be updated.", error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        updateCartItemCount();
+    });
+
+</script>

@@ -13,13 +13,16 @@ namespace EcommerceProject.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IBrandService _brandService;
         private readonly ILogger<ShopController> _logger;
+        private readonly IProductSizeService _productSizeService;
 
-        public ShopController(IProductService productService, ICategoryService categoryService, IBrandService brandService, ILogger<ShopController> logger)
+        public ShopController(IProductService productService, ICategoryService categoryService, IBrandService brandService, ILogger<ShopController> logger, IProductSizeService productSizeService)
         {
             _productService = productService;
+
             _categoryService = categoryService;
             _brandService = brandService;
             _logger = logger;
+            _productSizeService = productSizeService;
         }
 
         public IActionResult Index()
@@ -27,6 +30,7 @@ namespace EcommerceProject.Controllers
             var products = _productService.GetAllProducts();
             var categories = _categoryService.GetAllCategories();
             var brands = _brandService.GetAllBrands();
+     
             var viewModel = new ShopViewModel
             {
                 Products = products,

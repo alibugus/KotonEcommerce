@@ -23,7 +23,6 @@ namespace EcommerceProject.Controllers
             {
                 return RedirectToAction("Index", "GuestCheckout"); // Giriş yapmamış kullanıcıları yönlendir
             }
-
             var user = _userManager.GetUserAsync(User).Result;
             var orders = _orderService.GetOrdersByUserId(user.Id);
             return View(orders);

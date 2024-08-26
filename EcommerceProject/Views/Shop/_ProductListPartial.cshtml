@@ -16,18 +16,12 @@
                                 <img class="wishlist-icon" src="img/icon/heart.png" alt="Add to Wishlist">
                             </a>
                         </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/icon/compare.png" alt="Compare">
-                                <span>Compare</span>
-                            </a>
-                        </li>
-                        <li><a href="#"><img src="img/icon/search.png" alt="Search"></a></li>
+                       
                     </ul>
                 </div>
                 <div class="product__item__text">
                     <h6>@product.Name</h6>
-                    <a href="#" class="add-cart" onclick="AddToCart(@product.Id, 1); return false;">+ Add To Cart</a>
+                    <a href="" class="add-cart" onclick="AddToCart(@product.Id); return false;">+ Add To Cart</a>
                     <div class="rating">
                         @for (int i = 0; i < 5; i++)
                         {
@@ -35,16 +29,16 @@
                         }
                     </div>
                     <h5>@product.Price.ToString("C")</h5>
-                    <div class="product__color__select">
-                        <label for="pc-@product.Id-1">
-                            <input type="radio" id="pc-@product.Id-1" @(product.Color == "Black" ? "checked" : "")>
-                        </label>
-                        <label class="active black" for="pc-@product.Id-2">
-                            <input type="radio" id="pc-@product.Id-2" @(product.Color == "Black" ? "checked" : "")>
-                        </label>
-                        <label class="grey" for="pc-@product.Id-3">
-                            <input type="radio" id="pc-@product.Id-3" @(product.Color == "Grey" ? "checked" : "")>
-                        </label>
+
+                    <!-- Dynamic Size Selection -->
+                    <div class="product__size__select">
+                        @foreach (var size in product.ProductSizes)
+                        {
+                            <label class="size-label" for="size-@size.Id">
+                                <input type="radio" name="size-@product.Id" id="size-@size.Id" value="@size.Size" @(size.StockQuantity > 0 ? "" : "disabled")>
+                                @size.Size
+                            </label>
+                        }
                     </div>
                 </div>
             </div>
@@ -76,12 +70,23 @@
     </div>
 </div>
 
-
-
-
-
-
 <script type="text/javascript">
+    $(document).ready(function () {
+        // Ürün resmi tıklanınca işlem başlatılır
+        $('.product__item__pic').on('click', function () {
+            // closest ile en yakın div[data-product-id] olan elemanı bul
+            var productId = $(this).closest('div[data-product-id]').data('product-id');
+            console.log("Product ID (closest):", productId);
+
+            // Alternatif olarak, doğrudan parent div'den productId çek
+            var directProductId = $(this).parent().data('product-id');
+            console.log("Product ID (direct):", directProductId);
+
+            // Ürün detayları için AJAX isteği
+            window.location.href = '@Url.Action("IndexGet", "ProductDetails")?ProductId=' + productId;
+          
+        });
+    });
     $(document).ready(function () {
         setTimeout(function () {
             $('.product__item').each(function () {
@@ -102,18 +107,48 @@
         }
     }
 
+    $(document).ready(function () {
+        // Ürün resmine tıklanınca yönlendirme işlemi
+        $('.product__item__pic').on('click', function (event) {
+            // Ürün resmi tıklanırken, en yakın üst div'den data-product-id değerini al
+            var productId = $(this).closest('div[data-product-id]').data('product-id');
+            console.log("Product ID:", productId);
 
+            // Ürün detayları için yönlendirme
+            window.location.href = '@Url.Action("IndexGet", "ProductDetails")?ProductId=' + productId;
+        });
 
-    function AddToCart(productId, quantity) {
-        console.log("AddToCart called with productId:", productId, "quantity:", quantity);
+        // Wishlist butonlarına tıklanma kontrolü
+        $('.wishlist-icon').on('click', function (event) {
+            // Wishlist butonuna tıklanırken yönlendirme işlemi engelle
+            event.stopPropagation();
+            var productId = $(this).closest('div[data-product-id]').data('product-id');
+            AddToWishList(productId);
+        });
+
+    });
+
+    function AddToCart(productId) {
+        // Capture the selected size value
+        var selectedSize = $('input[name="size-' + productId + '"]:checked').val();
+
+        if (!selectedSize) {
+            alert("Please select a size before adding to cart.");
+            return;
+        }
+
+        console.log("AddToCart called with productId:", productId, "size:", selectedSize);
         $.ajax({
-            url: '@Url.Action("AddToCart", "ShopCart")',
+            url: '@Url.Action("AddToCart", "ShopCart")',  // Adjust URL as needed
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({ ProductId: productId, Quantity: quantity }),
+            data: JSON.stringify({ ProductId: productId, selectedSize: selectedSize, Quantity: 1 }),
             success: function (response) {
                 if (response.success) {
                     $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
+                    updateCartDetails();
+                    window.location.reload();
+                   
                 } else {
                     $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
                 }
@@ -146,13 +181,9 @@
     }
 
     function AddToWishList(productId) {
-        event.preventDefault(); // Prevent the default behavior of the anchor tag
-        console.log("AddToWishList called with productId:", productId);
-
-        // Check if the user is authenticated
+        event.preventDefault();
         var isAuthenticated = '@User.Identity.IsAuthenticated';
         if (isAuthenticated === 'False') {
-            // Show the login modal if the user is not authenticated
             var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
             myModal.show();
             return;
@@ -165,25 +196,23 @@
             data: JSON.stringify({ ProductId: productId }),
             success: function (response) {
                 if (response.success) {
-                    console.log("ProductId in success response:", productId);
                     $('#feedback').html('<div class="alert alert-success">' + response.message + '</div>');
                     var iconSrc = response.inWishList ? 'img/icon/heart-filled.png' : 'img/icon/heart.png';
                     $('div[data-product-id="' + productId + '"] .wishlist-icon').attr('src', iconSrc);
                 } else {
-                    console.log("ProductId in error response:", productId);
                     $('#feedback').html('<div class="alert alert-danger">' + response.message + '</div>');
                 }
             },
             error: function (xhr, status, error) {
-                console.log("ProductId in error handler:", productId);
                 $('#feedback').html('<div class="alert alert-danger">An error occurred: ' + error + '</div>');
             }
         });
     }
 
-    // Close the modal when the "Continue as Guest" button is clicked
-   
-
-    // Bootstrap modal automatically handles the close button and click outside functionality
+    // Handle size selection
+    var selectedSize = '';
+    $('.product__size__select input[type="radio"]').on('change', function () {
+        selectedSize = $(this).val();
+    });
 </script>
 

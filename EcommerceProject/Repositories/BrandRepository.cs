@@ -17,5 +17,9 @@ namespace EcommerceProject.Repositories
         {
             return _context.Brands.ToList();
         }
+        public BrandModel GetBrandById(int id)
+        {
+            return _context.Brands.Find(id);
+        }
     }
 }

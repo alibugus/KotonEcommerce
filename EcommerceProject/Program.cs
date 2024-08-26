@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using EcommerceProject.Services.Interface;
 using EcommerceProject.Repositories.Interface;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -32,7 +34,8 @@ builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
+builder.Services.AddScoped<IGuestCouponService, GuestCouponService>();
+builder.Services.AddScoped<IUserCouponRepository, UserCouponRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
@@ -44,7 +47,10 @@ builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddScoped<IDiscountService, DiscountService>();
-
+builder.Services.AddScoped<IModelInformationRepository, ModelInformationRepository>();
+builder.Services.AddScoped<IModelInformationService, ModelInformationService>();
+builder.Services.AddScoped<IProductSizeRepository, ProductSizeRepository>();
+builder.Services.AddScoped<IProductSizeService, ProductSizeService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ConfirmMailService>();
 builder.Services.AddControllersWithViews();
@@ -53,6 +59,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IWishListService, WishListService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<GoogleSignInService>();
 // Configure Google Authentication
 builder.Services.AddAuthentication()
         .AddGoogle(opts =>
@@ -60,8 +67,20 @@ builder.Services.AddAuthentication()
             opts.ClientId = "116794396854-alhpnf8vtjk6hk1ges7mov2o80dfan7m.apps.googleusercontent.com";
             opts.ClientSecret = "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";
             opts.SignInScheme = IdentityConstants.ExternalScheme;
+            opts.Scope.Add("email");
+            opts.Scope.Add("profile");
+            opts.Events.OnRedirectToAuthorizationEndpoint = context =>
+            {
+                context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
+                return Task.CompletedTask;
+            };
         });
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Kendi login yolunuzu buraya ekleyin
+    options.LoginPath = "/Login";
+   
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -50,7 +50,7 @@
                                         <div class="quantity-container">
                                             <div>
                                                 <button class="quantity-btn" onclick="DecreaseProductQuantity(@item.Product.Id)">-</button>
-                                                <input type="text" id="quantity-@item.Product.Id" value="@item.Quantity">
+                                                <input type="text" id="quantity-@item.Product.Id" value="@item.Quantity" readonly>
                                                 <button class="quantity-btn" onclick="IncreaseProductQuantity(@item.Product.Id)">+</button>
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn update__btn">
-                            <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                            <a href="javascript:void(0);" onclick="location.reload()"><i class="fa fa-spinner"></i> Update cart</a>
                         </div>
                     </div>
                 </div>
@@ -85,38 +85,89 @@
                     <form asp-action="ApplyCoupon" asp-controller="ShopCart" method="post" id="apply-coupon-form">
                         <input asp-for="@Model.CouponCode" type="text" id="coupon-code" name="CouponCode" placeholder="Coupon code" value="@Model.CouponCode">
                         <button type="submit">Apply</button>
+                        <!-- Display validation errors if there are any -->
+                        
+                        <!-- Hidden inputs for CartItemViewModel properties -->
+                        <input type="hidden" asp-for="isAuthenticated" />
+                        <input type="hidden" asp-for="DiscountAmount" />
+                        <input type="hidden" asp-for="Subtotal" />
+                        <input type="hidden" asp-for="TotalAmount" />
+                        @foreach (var item in Model.CartItem)
+                        {
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Id" value="@item.Product.Id" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Name" value="@item.Product.Name" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Price" value="@item.Product.Price" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.ImageUrl" value="@item.Product.ImageUrl" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Quantity" value="@item.Quantity" />
+                        }
                     </form>
-                    @if (Model.DiscountAmount > 0)
+                </div>
+                <div>
+                    @if (Model.ValidationErrors != null && Model.ValidationErrors.Any())
                     {
-                        <div>
-                            <p>Coupon applied: @Model.CouponCode</p>
-                            <p>Discount: -@Model.DiscountAmount.ToString("C")</p>
+                        <div class="validation-errors mt-2">
+                            @foreach (var error in Model.ValidationErrors)
+                            {
+                                <div class="validation-error">
+                                    <i class="fa fa-exclamation-triangle"></i> @error.Value
+                                </div>
+                            }
                         </div>
                     }
                 </div>
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
-                        <li>Subtotal <span>@(Model.CartItem.Sum(item => item.Product.Price * item.Quantity).ToString("C"))</span></li>
+                        <li>Subtotal <span>@Model.Subtotal.ToString("C")</span></li>
                         @if (Model.DiscountAmount > 0)
                         {
-                            <li>Discount <span> - @Model.DiscountAmount.ToString("C")</span></li>
+                            <li>Discount <span>- @Model.DiscountAmount.ToString("C")</span></li>
                             <li>Total <span>@Model.TotalAmount.ToString("C")</span></li>
                         }
                         else
                         {
-                            <li>Total <span>@(Model.CartItem.Sum(item => item.Product.Price * item.Quantity).ToString("C"))</span></li>
+                            <li>Total <span>@Model.TotalAmount.ToString("C")</span></li>
                         }
                     </ul>
-                    <div>
-
+                    <form asp-action="SendConfirmation" asp-controller="ShopCart" method="post" id="proceed-coupon-form">
+                        <!-- Hidden inputs for CartItemViewModel properties -->
+                        <input type="hidden" asp-for="CouponCode">
+                        <input type="hidden" asp-for="isAuthenticated" />
+                        <input type="hidden" asp-for="DiscountAmount" />
+                        <input type="hidden" asp-for="Subtotal" />
+                        <input type="hidden" asp-for="TotalAmount" />
+                        @foreach (var item in Model.CartItem)
+                        {
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Id" value="@item.Product.Id" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Name" value="@item.Product.Name" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.Price" value="@item.Product.Price" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Product.ImageUrl" value="@item.Product.ImageUrl" />
+                            <input type="hidden" name="CartItem[@item.Product.Id].Quantity" value="@item.Quantity" />
+                        }
                         <div class="continue__btn update__btn">
-                            <a href="javascript:proceedToCheckout('@Model.isAuthenticated.ToString().ToLower()', '@ViewData["Deger"] = @Model.TotalAmount.ToString("C")')" class="primary-btn fa fa-spinner">Proceed to checkout</a>
+                            <a type="submit" href="javascript:proceedToCheckout('@Model.isAuthenticated.ToString().ToLower()')" class="primary-btn">Proceed to checkout</a>
                         </div>
-
-                    </div>
+                    </form>
+                    <!-- Applied Coupons Section Begin -->
+                    @if (Model.DiscountAmount > 0)
+                    {
+                        <form asp-action="RemoveCoupon" asp-controller="ShopCart" method="post" id="apply-coupon-form">
+                            <div class="cart__total">
+                                <h6>Applied Coupons</h6>
+                                <div class="coupon-card">
+                                    <p>@Model.CouponCode</p>
+                                    <p>Discount: -@Model.DiscountAmount.ToString("C")</p>
+                                    <input type="hidden" asp-for="@Model.CouponCode" name="CouponCode" value="@Model.CouponCode">
+                                    <button type="submit" class="primary-btn">Remove</button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    <!-- Applied Coupons Section End -->
                 </div>
-            </div>
+                </div>
+
+               
         </div>
     </div>
 </section>
@@ -146,13 +197,13 @@
 
     function proceedToCheckout(isAuthenticated) {
         if (isAuthenticated == "true") {
-            console.log("sa" + isAuthenticated);
-            window.location.href = '@Url.Action("Index", "Checkout")';
+            // Submit the form to pass the model data
+            $('#proceed-coupon-form').submit();
         } else {
-            console.log(isAuthenticated);
             $('#loginModal').modal('show');
         }
     }
+
 
 
     function continueAsGuest() {
@@ -240,4 +291,5 @@
             background-color: grey; /* Darker color on hover */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
         }
+
 </style>

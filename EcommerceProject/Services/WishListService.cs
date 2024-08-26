@@ -65,7 +65,12 @@ namespace EcommerceProject.Services
 
         private void SaveWishList(List<WishListModel> wishList, string userId)
         {
-            var wishlistJSON = JsonConvert.SerializeObject(wishList);
+            var jsonSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            };
+            var wishlistJSON = JsonConvert.SerializeObject(wishList,jsonSettings);
             var cookieOptions = new CookieOptions
             {
                 Expires = System.DateTime.Now.AddDays(7)

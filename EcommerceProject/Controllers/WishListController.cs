@@ -18,9 +18,18 @@ namespace EcommerceProject.Controllers
         }
 
         public IActionResult Index()
-        {
-            var wishlist = _wishListService.GetWishList();
-            return View(wishlist);
+
+        {  
+            if(User.Identity.IsAuthenticated)
+            {
+                var wishlist = _wishListService.GetWishList();
+                return View(wishlist);
+            }
+            else
+            {
+                return RedirectToAction("Index","Login");
+            }
+            
         }
 
         [HttpPost]

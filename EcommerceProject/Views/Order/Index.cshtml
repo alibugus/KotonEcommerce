@@ -23,8 +23,8 @@
                             
                             <td>@order.Id</td>
                             <td>@order.OrderDate.ToShortDateString()</td>
-                            <td>@order.OrderDetails.Sum(d => d.Quantity * d.Price).ToString("C")</td>
-                            <td>@order.OrderDetails.Sum(d => d.Quantity * d.Price).ToString("C")</td>
+                            <td>@order.TotalPrice.ToString("C")</td>
+                           
                             <td>Processing</td>
                             <td>
                                 <button onclick="Sendid(@order.Id)"class="site-btn view-details" >View</button>
@@ -45,7 +45,7 @@
              function Sendid(OrderId) {
                  window.location.href = '@Url.Action("IndexGet", "OrderDetail")?OrderId=' + OrderId;
              }
-    </script>
+        </script>
 
 }
 

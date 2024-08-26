@@ -7,5 +7,6 @@
         public decimal DiscountAmount { get; set; }
         public bool IsActive { get; set; }  // Kuponun geçerli olup olmadığını kontrol eder
         public DateTime ExpiryDate { get; set; }
+        public ICollection<UserCouponModel> UserCoupons { get; set; }
     }
 }
